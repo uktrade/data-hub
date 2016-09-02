@@ -5,5 +5,27 @@ services:
       context: ./postgres-namedatalen
     restart: always
     volumes:
-        - ./data/pgsql:/var/lib/postgresql/data
+      - ./data/pgsql:/var/lib/postgresql/data
+  es:
+    image: elasticsearch
+    restart: always
+  korben-poll:
+    build:
+      context: korben
+    depends_on:
+      - postgres
+      - es
+    links:
+      - postgres
+      - es
+  leeloo:
+    build:
+      context: leeloo
+    depends_on:
+      - postgres
+      - es
+    links:
+      - postgres
+      - es
+
 
