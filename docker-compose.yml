@@ -6,11 +6,20 @@ services:
     restart: always
     volumes:
       - pg_data:/var/lib/postgresql/data
-  elasticsearch:
+  es:
     image: elasticsearch
     restart: always
+  korben-poll:
+    build:
+      context: korben
     volumes:
-      - es_data:/usr/share/elasticsearch/data
+        - pg_data:/var/lib/postgresql/data
+    depends_on:
+      - postgres
+      - es
+    links:
+      - postgres
+      - es
 
 volumes:
     pg_data:
