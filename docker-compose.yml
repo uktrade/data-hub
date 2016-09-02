@@ -1,0 +1,13 @@
+version: "2"
+services:
+  postgres:
+    build:
+      context: ./korben/postgres-namedatalen
+    restart: always
+    volumes:
+        - pg_data:/var/lib/postgresql/data
+
+
+volumes:
+    pg_data:
+      external: true
