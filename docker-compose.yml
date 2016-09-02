@@ -5,9 +5,15 @@ services:
       context: ./korben/postgres-namedatalen
     restart: always
     volumes:
-        - pg_data:/var/lib/postgresql/data
-
+      - pg_data:/var/lib/postgresql/data
+  elasticsearch:
+    image: elasticsearch
+    restart: always
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
 
 volumes:
     pg_data:
+      external: true
+    es_data:
       external: true
