@@ -20,6 +20,18 @@ services:
     links:
       - postgres
       - es
+  leeloo:
+    build:
+      context: leeloo
+    volumes:
+        - pg_data:/var/lib/postgresql/data
+    depends_on:
+      - postgres
+      - es
+    links:
+      - postgres
+      - es
+
 
 volumes:
     pg_data:
