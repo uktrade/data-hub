@@ -6,6 +6,11 @@ services:
     restart: always
     volumes:
         - pg_data:/var/lib/postgresql/data
+  korben-poll:
+    build:
+      context: korben
+    volumes:
+        - pg_data:/var/lib/postgresql/data
 
 
 volumes:
