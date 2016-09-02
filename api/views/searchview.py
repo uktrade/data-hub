@@ -3,14 +3,14 @@ from django.http import HttpResponse
 from api.models.searchitem import SearchItem
 from datahubapi import settings
 
+SIZE = 10
 
-def transform_search_result(es_result, term, filters={}):
+
+def transform_search_result(es_result):
     result = {
-        "term": term,
         "total": es_result["hits"]["total"],
         "max_score": es_result["hits"]["max_score"],
         "hits": es_result["hits"]["hits"],
-        "filters": filters
     }
 
     facets = {}
@@ -25,8 +25,13 @@ def transform_search_result(es_result, term, filters={}):
     return result
 
 
-def es_search(term, filters={}):
+def es_search(term, filters={}, page=1):
+
+    from_ = (page - 1) * SIZE
+
     query = {
+        "size": SIZE,
+        "from": from_,
         "query": {
             "query_string": {"query": term},
         },
@@ -51,8 +56,8 @@ def es_search(term, filters={}):
         }
 
     index_name = SearchItem.Meta.es_index_name
-    es_results = settings.ES_CLIENT.search(index=index_name, body=query)
-    result = transform_search_result(es_result=es_results, term=term, filters=filters)
+    es_results = settings.ES_CLIENT.search(index=index_name, body=query, )
+    result = transform_search_result(es_result=es_results)
     return result
 
 
@@ -67,7 +72,13 @@ def parsefilters(filters):
 
 # /search?term=fred&filter=name:value&filter=name:value&page=1
 def search(request):
-    term = request.GET.get('term', '')
-    filters = parsefilters(request.GET.getlist('filter'))
-    result = es_search(term=term, filters=filters)
+    params = {
+        "term": request.GET.get('term', ''),
+        "filters": parsefilters(request.GET.getlist('filter')),
+        "page": int(request.GET.get('page', '1')),
+    }
+
+    result = es_search(**params)
+    result.update(**params)
+
     return HttpResponse(json.dumps(result), content_type='application/json')
