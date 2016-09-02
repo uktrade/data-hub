@@ -11,6 +11,10 @@ services:
       context: korben
     volumes:
         - pg_data:/var/lib/postgresql/data
+    depends_on:
+      - postgres
+    links:
+      - postgres
 
 
 volumes:
