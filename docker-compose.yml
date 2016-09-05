@@ -2,7 +2,7 @@ version: "2"
 services:
   postgres:
     build:
-      context: ./postgres-namedatalen
+      context: korben/korben/odata_psql
     restart: always
     volumes:
       - ./data/pgsql:/var/lib/postgresql/data
