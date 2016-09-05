@@ -19,12 +19,3 @@ services:
       - postgres
       - es
     entrypoint: korben sync poll
-  leeloo:
-    build:
-      context: leeloo
-    depends_on:
-      - postgres
-      - es
-    links:
-      - postgres
-      - es
