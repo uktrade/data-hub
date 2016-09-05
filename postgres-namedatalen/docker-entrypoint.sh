@@ -89,6 +89,9 @@ if [ "$1" = 'postgres' ]; then
 
 		gosu postgres pg_ctl -D "$PGDATA" -m fast -w stop
 
+		# open database right up
+		echo "listen_addresses='*'" >> /var/lib/postgresql/data/postgresql.conf
+
 		echo
 		echo 'PostgreSQL init process complete; ready for start up.'
 		echo
