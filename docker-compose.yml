@@ -1,5 +1,11 @@
 version: "2"
 services:
+  postgres:
+    build:
+      context: ./postgres-namedatalen
+    restart: always
+    volumes:
+      - ./data/pgsql:/var/lib/postgresql/data
   es:
     image: elasticsearch
     restart: always
@@ -22,17 +28,3 @@ services:
     links:
       - postgres
       - es
-
-  postgres:
-    build:
-      context: ./postgres-namedatalen
-    restart: always
-    volumes:
-      - ./data/pgsql:/var/lib/postgresql/data
-  postgres-link:
-    image: postgres
-    depends_on:
-      - postgres
-    links:
-      - postgres
-    entrypoint: psql -h postgres -U postgres -d template1 -c 'SELECT 1'
