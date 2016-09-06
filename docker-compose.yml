@@ -19,3 +19,13 @@ services:
       - postgres
       - es
     entrypoint: korben sync poll
+  korben-etl:
+    build:
+      context: korben
+    depends_on:
+      - postgres
+      - es
+    links:
+      - postgres
+      - es
+    entrypoint: korben etl
