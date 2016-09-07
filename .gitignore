@@ -70,3 +70,5 @@ env
 staticfiles
 .env
 import.sh
+reset.sh
+test.csv
