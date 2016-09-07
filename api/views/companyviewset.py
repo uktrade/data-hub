@@ -2,6 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from api.models.chcompany import CHCompany
 from api.models.company import Company
+from api.serializers import CHCompanySerializer
 from api.serializers import CompanySerializer
 from api.services.searchservice import delete_for_company_number, delete_for_company_id, search_item_from_company
 
@@ -52,3 +53,17 @@ class CompanyViewSet(viewsets.ModelViewSet):
         search_item.save()
 
         return Response(serializer.data)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+
+        data = serializer.data
+
+        # if there is a company_number, get the CH data and add that
+        if instance.company_number and len(instance.company_number) > 0:
+            ch_company = CHCompany.objects.get(pk=instance.company_number)
+            ch_serializer = CHCompanySerializer(ch_company)
+            data['ch'] = ch_serializer.data
+
+        return Response(data)
