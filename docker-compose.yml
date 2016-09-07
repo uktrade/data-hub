@@ -1,31 +1,60 @@
 version: "2"
 services:
-  postgres:
+  leeloo:
     build:
-      context: korben/korben/odata_psql
-    restart: always
-    volumes:
-      - ./data/pgsql:/var/lib/postgresql/data
-  es:
-    image: elasticsearch
-    restart: always
+      context: leeloo
+    environment:
+      - SECRET_KEY=foobar
+      - DATABASE_URL=postgres://postgres:@postgres:/datahub
+    ports:
+      - "8000:8000"
+    links:
+      - postgres
+      - es
+
   korben-sync-poll:
     build:
       context: korben
-    depends_on:
-      - postgres
-      - es
+    environment:
+      - DATABASE_URL=postgres://postgres:@postgres:/datahub
+      - DATABASE_ODATA_URL=postgres://postgres:@postgres_odata:/datahub_odata
     links:
       - postgres
+      - postgres_odata
       - es
-    entrypoint: korben sync poll
+    command: korben sync poll
+
   korben-etl:
     build:
       context: korben
-    depends_on:
-      - postgres
-      - es
+    environment:
+      - DATABASE_URL=postgres://postgres:@postgres:/datahub
+      - DATABASE_ODATA_URL=postgres://postgres:@postgres_odata:/datahub_odata
+    ports:
+      - "9000:8000"
     links:
       - postgres
+      - postgres_odata
       - es
-    entrypoint: korben etl
+    command: korben etl
+
+  postgres_odata:
+    build:
+      context: postgres_namedatalen
+    restart: always
+    environment:
+      - POSTGRES_DB=datahub_odata
+    volumes:
+      - ./data/pgsql_odata:/var/lib/postgresql/data
+
+  postgres:
+    image: postgres:9.5
+    restart: always
+    environment:
+      - POSTGRES_DB=datahub
+    volumes:
+      - ./data/pgsql:/var/lib/postgresql/data
+
+  es:
+    image: elasticsearch
+    restart: always

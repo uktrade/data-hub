@@ -1,0 +1,26 @@
+diff --git a/src/backend/utils/misc/postgresql.conf.sample b/src/backend/utils/misc/postgresql.conf.sample
+index 18c433b..343d7f7 100644
+--- a/src/backend/utils/misc/postgresql.conf.sample
++++ b/src/backend/utils/misc/postgresql.conf.sample
+@@ -56,7 +56,7 @@
+
+ # - Connection Settings -
+
+-#listen_addresses = 'localhost'		# what IP address(es) to listen on;
++listen_addresses = '*'		# what IP address(es) to listen on;
+ 					# comma-separated list of addresses;
+ 					# defaults to 'localhost'; use '*' for all
+ 					# (change requires restart)
+diff --git a/src/include/pg_config_manual.h b/src/include/pg_config_manual.h
+index 91fb134..10336ec 100644
+--- a/src/include/pg_config_manual.h
++++ b/src/include/pg_config_manual.h
+@@ -20,7 +20,7 @@
+  *
+  * Changing this requires an initdb.
+  */
+-#define NAMEDATALEN 64
++#define NAMEDATALEN 512
+
+ /*
+  * Maximum number of arguments to a function.

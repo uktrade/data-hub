@@ -35,6 +35,8 @@ ADD docker-entrypoint.sh /
 RUN chmod a+x docker-entrypoint.sh
 
 ADD docker-entrypoint-initdb.d /docker-entrypoint-initdb.d
+
+#fix me
 ADD cdms-psql-create.sql /cdms-psql-create.sql
 
 

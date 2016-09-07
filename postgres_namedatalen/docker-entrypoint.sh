@@ -18,7 +18,6 @@ if [ "$1" = 'postgres' ]; then
 	if [ ! -s "$PGDATA/PG_VERSION" ]; then
 		eval "gosu postgres initdb $POSTGRES_INITDB_ARGS"
 		# open database right up
-		echo "listen_addresses='*'" >> /var/lib/postgresql/data/postgresql.conf
 
 
 		# check password first so we can output the warning before postgres
