@@ -4,7 +4,7 @@ from api.models.chcompany import CHCompany
 from api.models.company import Company
 from api.serializers import CHCompanySerializer
 from api.serializers import CompanySerializer
-from api.services.searchservice import delete_for_company_number, delete_for_company_id, search_item_from_company
+from api.services.searchservice import delete_for_company_number, delete_for_source_id, search_item_from_company
 
 
 def check_ch_data(request):
@@ -48,7 +48,7 @@ class CompanyViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         company = serializer.save()
-        delete_for_company_id(company.id)
+        delete_for_source_id(company.id)
         search_item = search_item_from_company(company)
         search_item.save()
 

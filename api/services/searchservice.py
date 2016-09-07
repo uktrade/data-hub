@@ -29,14 +29,14 @@ def delete_for_company_number(company_number):
         delete_for_id(index_id)
 
 
-def delete_for_company_id(company_id):
+def delete_for_source_id(source_id):
     # Find the existing entry to get it's id
     find_query = {
         "query": {
             "constant_score": {
                 "filter": {
                     "term": {
-                        "source_id": company_id
+                        "source_id": source_id
                     }
                 }
             }
@@ -119,7 +119,7 @@ def transform_search_result(es_result):
     return result
 
 
-# Generate an elastic search item from an company record
+# Generate an elastic search item from a company record
 def search_item_from_company(company):
     ch = CHCompany.objects.get(pk=company.company_number)
     if company.company_number and len(company.company_number) > 0:
@@ -147,4 +147,30 @@ def search_item_from_company(company):
         alt_address_postcode=company.trading_address_postcode,
         company_number=company.company_number,
         incorporation_date=ch.incorporation_date
+    )
+
+
+# Generate an elastic search item from a contact record
+def search_item_from_contact(contact):
+    return SearchItem(
+        source_id=contact.id,
+        result_source='DIT',
+        result_type='CONTACT',
+        title=contact.first_name + ' ' + contact.last_name,
+        address_1=contact.address_1,
+        address_2=contact.address_2,
+        address_town=contact.address_town,
+        address_county=contact.address_county,
+        address_country=contact.address_country,
+        address_postcode=contact.address_postcode
+    )
+
+
+# Generate an elastic search item from an interaction record
+def search_item_from_interaction(interaction):
+    return SearchItem(
+        source_id=interaction.id,
+        result_source='DIT',
+        result_type='INTERACTION',
+        title=interaction.title
     )
