@@ -14,3 +14,11 @@ services:
     links:
       - postgres
     entrypoint: korben etl
+  korben-test:
+    build:
+      context: korben
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    command: python setup.py test

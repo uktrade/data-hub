@@ -1,4 +1,5 @@
 #!/bin/sh
 
-cd korben
-KORBEN_CONF_PATH=jenkins.yml python setup.py test
+set -e
+docker-compose -f docker-compose-jenkins.yml build
+docker-compose -f docker-compose-jenkins.yml up korben-test
