@@ -1,0 +1,16 @@
+version: "2"
+services:
+  postgres:
+    build:
+      context: korben/korben/odata_psql
+    restart: always
+    volumes:
+      - ./data/pgsql:/var/lib/postgresql/data
+  korben-etl:
+    build:
+      context: korben
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    entrypoint: korben etl
