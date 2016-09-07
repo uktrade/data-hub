@@ -7,7 +7,8 @@ node {
    stage 'Unit test'
    step([$class: 'GitHubSetCommitStatusBuilder'])
    wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
-     sh 'ls -la'
+     sh 'echo $WORKSPACE'
+     sh 'cd $WORKSPACE'
      sh 'pwd'
      sh 'KORBEN_CONF_PATH=korben/jenkins.yml python setup.py test'
    }
