@@ -1,24 +1,21 @@
 version: "2"
 services:
-  postgres:
-    build:
-      context: korben/korben/odata_psql
-    restart: always
-    volumes:
-      - ./data/pgsql:/var/lib/postgresql/data
+  postgres-test:
+    image: postgres
   korben-etl:
     build:
       context: korben
     depends_on:
-      - postgres
+      - postgres-test
     links:
-      - postgres
+      - postgres-test
     entrypoint: korben etl
   korben-test:
+    environment: 
+      KORBEN_CONF_PATH: jenkins.yml
     build:
       context: korben
-    depends_on:
-      - postgres
     links:
-      - postgres
+      - postgres-test
+      - korben-etl
     command: python setup.py test
