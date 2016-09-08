@@ -4,10 +4,14 @@ services:
       image: postgres:9.5
     environment:
       - POSTGRES_DB=test
+    volumes:
+      - ./data/pgsql_test:/var/lib/postgresql/data
   postgres-test-odata:
       image: postgres:9.5
     environment:
       - POSTGRES_DB=test_odata
+    volumes:
+      - ./data/pgsql_test_odata:/var/lib/postgresql/data
   korben-etl:
     build:
       context: korben
