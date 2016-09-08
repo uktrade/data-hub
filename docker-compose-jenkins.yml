@@ -1,21 +1,33 @@
 version: "2"
 services:
   postgres-test:
-    image: postgres
+      image: postgres:9.5
+    environment:
+      - POSTGRES_DB=test
+  postgres-test-odata:
+      image: postgres:9.5
+    environment:
+      - POSTGRES_DB=test_odata
   korben-etl:
     build:
       context: korben
-    depends_on:
-      - postgres-test
     links:
       - postgres-test
+      - postgres-test-odata
+    environment: 
+      DATABASE_URL: postgres://postgres:@postgres:/test
+      DATABASE_ODATA_URL: postgres://postgres:@postgres_odata:/test_odata
+      KORBEN_CONF_PATH: jenkins.yml
     entrypoint: korben etl
   korben-test:
     environment: 
+      DATABASE_URL: postgres://postgres:@postgres:/test
+      DATABASE_ODATA_URL: postgres://postgres:@postgres_odata:/test_odata
       KORBEN_CONF_PATH: jenkins.yml
     build:
       context: korben
     links:
       - postgres-test
+      - postgres-test-odata
       - korben-etl
     command: python setup.py test
