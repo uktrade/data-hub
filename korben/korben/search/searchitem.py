@@ -1,5 +1,5 @@
 from api.serializers import SearchItemSerializer
-from datahubapi import settings
+from . import settings
 
 
 class SearchItem(object):
@@ -29,16 +29,7 @@ class SearchItem(object):
         self.incorporation_date = incorporation_date
         self.alt_title = alt_title
 
-    def save(self):
-        try:
-            serializer = SearchItemSerializer(self)
-            data = serializer.data
-            settings.ES_CLIENT.create(index=self.Meta.es_index_name,
-                                      doc_type=self.Meta.es_type_name,
-                                      body=data,
-                                      refresh=True)
-        except Exception as inst:
-            print(inst)
+
 
     class Meta:
         es_index_name = 'datahub'
