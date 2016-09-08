@@ -5,7 +5,9 @@ services:
       context: leeloo
     environment:
       - SECRET_KEY=foobar
-      - DATABASE_URL=postgres://postgres@postgres/datahub
+      - UI_SECRET=foobar
+      - DATABASE_URL=postgres://postgres:@postgres:/datahub
+      ports:
     ports:
       - "8000:8000"
     links:
