@@ -19,14 +19,14 @@ services:
       - postgres-test
       - postgres-test-odata
     environment: 
-      DATABASE_URL: postgres://postgres:@postgres:/test
-      DATABASE_ODATA_URL: postgres://postgres:@postgres_odata:/test_odata
+      DATABASE_URL: postgres://postgres@postgres/test
+      DATABASE_ODATA_URL: postgres://postgres@postgres_odata/test_odata
       KORBEN_CONF_PATH: jenkins.yml
     entrypoint: korben etl
   korben-test:
     environment: 
       DATABASE_URL: postgres://postgres:@postgres:/test
-      DATABASE_ODATA_URL: postgres://postgres:@postgres_odata:/test_odata
+      DATABASE_ODATA_URL: postgres://postgres@postgres_odata/test_odata
       KORBEN_CONF_PATH: jenkins.yml
     build:
       context: korben
