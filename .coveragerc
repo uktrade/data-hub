@@ -2,9 +2,12 @@
 branch = True
 source = leeloo
 omit =
-    datahubapi/*
+    leeloo/gunicorn
+    leeloo/datahubapi
     *migrations*
-    */test/*
+    *test*
+    korben
+    postgres_namedatalen
 
 [report]
 exclude_lines =
