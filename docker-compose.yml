@@ -7,7 +7,6 @@ services:
       - SECRET_KEY=foobar
       - UI_SECRET=foobar
       - DATABASE_URL=postgres://postgres:@postgres:/datahub
-      ports:
     ports:
       - "8000:8000"
     links:
