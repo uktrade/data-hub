@@ -23,7 +23,7 @@ before_script:
   - sleep 10
 
 script:
-  - pytest --cov=api --cov-report term
+  - pytest leeloo --cov=api --cov-report term
 
 after_success:
   - coveralls
