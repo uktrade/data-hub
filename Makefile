@@ -5,3 +5,6 @@ leeloo_tests:
 
 leeloo_coverage:
 	docker-compose run leeloo pytest --cov=api --cov-report term
+
+leeloo_lint:
+	docker-compose run leeloo flake8
