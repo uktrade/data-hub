@@ -15,7 +15,7 @@ addons:
   postgresql: "9.5"
 
 install:
-  - pip install --user -r leeloo/requirements.txt
+  - pip install -r leeloo/requirements.txt
   - pip install coveralls
 
 before_script:
@@ -23,7 +23,7 @@ before_script:
   - sleep 10
 
 script:
-  - pytest
+  - pytest --cov=api --cov-report term
 
 after_success:
   - coveralls
