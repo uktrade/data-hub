@@ -3,17 +3,12 @@ sudo: required
 services:
   - docker
 
-env:
-  DOCKER_COMPOSE_VERSION: 1.8.0
-
-before_install:
- - curl -L https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
- - chmod +x docker-compose
- - sudo mv docker-compose /usr/local/bin
-
 script:
   - docker-compose build
   - make leeloo_coverage
 
 after_success:
   - coveralls
+
+notifications:
+  email: false
