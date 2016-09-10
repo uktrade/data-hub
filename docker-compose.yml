@@ -20,7 +20,7 @@ services:
       - DATABASE_ODATA_URL=postgres://postgres@postgres_odata/datahub_odata
     links:
       - postgres
-      - postgres_odata
+      - postgres-odata
       - es
     command: korben sync poll
 
@@ -34,18 +34,30 @@ services:
       - "9000:8000"
     links:
       - postgres
-      - postgres_odata
+      - postgres-odata
       - es
     command: korben etl
 
-  postgres_odata:
+  korben-sync-ch:
     build:
-      context: postgres_namedatalen
+      context: korben
+    environment:
+      - DATABASE_URL=postgres://postgres@postgres/datahub
+      - DATABASE_ODATA_URL=postgres://postgres@postgres_odata/datahub_odata
+    links:
+      - postgres
+      - postgres-odata
+      - es
+    command: korben sync ch
+
+  postgres-odata:
+    build:
+      context: postgres-namedatalen
     restart: always
     environment:
       - POSTGRES_DB=datahub_odata
     volumes:
-      - ./data/pgsql_odata:/var/lib/postgresql/data
+      - ./data/pgsql-odata:/var/lib/postgresql/data
 
   postgres:
     image: postgres:9.5
