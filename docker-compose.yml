@@ -5,50 +5,68 @@ services:
       context: leeloo
     environment:
       - SECRET_KEY=foobar
-      - DATABASE_URL=postgres://postgres@postgres/datahub
+      - DATABASE_URL=${DATABASE_URL}
     ports:
       - "8000:8000"
     links:
-      - postgres
+      - postgres-django
       - es
+
+  korben-sync-scrape:
+    build:
+      context: korben
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_ODATA_URL=${DATABASE_ODATA_URL}
+    links:
+      - postgres-django
+      - postgres-odata
+      - es
+    volumes:
+      - ./docker-volumes/korben-sync-scrape/cache:/src/cache
+    # command: korben sync scrape
+    command: exit
 
   korben-sync-poll:
     build:
       context: korben
     environment:
-      - DATABASE_URL=postgres://postgres@postgres/datahub
-      - DATABASE_ODATA_URL=postgres://postgres@postgres_odata/datahub_odata
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_ODATA_URL=${DATABASE_ODATA_URL}
     links:
-      - postgres
+      - postgres-django
       - postgres-odata
-      - es
+      - korben-etl
     command: korben sync poll
-
-  korben-etl:
-    build:
-      context: korben
-    environment:
-      - DATABASE_URL=postgres://postgres@postgres/datahub
-      - DATABASE_ODATA_URL=postgres://postgres@postgres_odata/datahub_odata
-    ports:
-      - "9000:8000"
-    links:
-      - postgres
-      - postgres-odata
-      - es
-    command: korben etl
 
   korben-sync-ch:
     build:
       context: korben
     environment:
-      - DATABASE_URL=postgres://postgres@postgres/datahub
-      - DATABASE_ODATA_URL=postgres://postgres@postgres_odata/datahub_odata
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_ODATA_URL=${DATABASE_ODATA_URL}
     links:
-      - postgres
+      - postgres-django
+      - postgres-odata
+      - korben-etl
+    volumes:
+      - ./docker-volumes/korben-sync-ch/cache:/cache
+    command: korben sync ch
+
+
+  korben-etl:
+    build:
+      context: korben
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_ODATA_URL=${DATABASE_ODATA_URL}
+    ports:
+      - "9000:8000"
+    links:
+      - postgres-django
       - postgres-odata
       - es
-    command: korben sync ch
+    command: korben etl
 
   postgres-odata:
     build:
@@ -57,15 +75,15 @@ services:
     environment:
       - POSTGRES_DB=datahub_odata
     volumes:
-      - ./data/pgsql-odata:/var/lib/postgresql/data
+      - ./data/postgres-odata:/var/lib/postgresql/data
 
-  postgres:
+  postgres-django:
     image: postgres:9.5
     restart: always
     environment:
       - POSTGRES_DB=datahub
     volumes:
-      - ./data/pgsql:/var/lib/postgresql/data
+      - ./docker-volumes/postgres-django:/var/lib/postgresql/data
 
   es:
     image: elasticsearch
