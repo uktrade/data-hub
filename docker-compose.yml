@@ -27,8 +27,7 @@ services:
       - es
     volumes:
       - ./docker-volumes/korben-sync-scrape/cache:/src/cache
-    # command: korben sync scrape
-    command: exit
+    command: echo not running korben sync scrape
 
   korben-sync-poll:
     build:
@@ -54,8 +53,7 @@ services:
       - korben-etl
     volumes:
       - ./docker-volumes/korben-sync-ch/cache:/cache
-    # command: korben sync ch
-    command: tail -f /dev/null
+    command: not running korben sync ch
 
 
   korben-etl:
