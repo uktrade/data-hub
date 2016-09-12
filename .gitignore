@@ -68,7 +68,7 @@ target/
 env
 *.pyc
 staticfiles
-.env
 import.sh
-data/
 
+# docker things
+docker-volumes/
