@@ -3,6 +3,8 @@ services:
   leeloo:
     build:
       context: leeloo
+    volumes:
+      - ./leeloo:/app/leeloo
     environment:
       - SECRET_KEY=foobar
       - UI_SECRET=foobar
