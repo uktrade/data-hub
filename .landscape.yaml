@@ -1,0 +1,18 @@
+doc-warnings: true
+test-warnings: false
+strictness: veryhigh
+max-line-length: 120
+pep8:
+  full: true
+uses:
+  - django
+autodetect: true
+requirements:
+  - leeloo/requirements.txt
+ignore-paths:
+  - leeloo/datahubapi
+  - leeloo/gunicorn
+  - korben
+  - postgres_namedatalen
+python-targets:
+  - 3

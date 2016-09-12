@@ -5,6 +5,7 @@ services:
       context: leeloo
     environment:
       - SECRET_KEY=foobar
+      - UI_SECRET=foobar
       - DATABASE_URL=${DATABASE_URL}
     ports:
       - "8000:8000"
