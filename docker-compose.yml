@@ -76,6 +76,7 @@ services:
     restart: always
     environment:
       - POSTGRES_DB=datahub_odata
+      - PAGER=datahub_odata
     volumes:
       - ./data/postgres-odata:/var/lib/postgresql/data
 
