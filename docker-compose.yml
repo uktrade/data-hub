@@ -39,8 +39,8 @@ services:
       - postgres-django
       - postgres-odata
       - korben-etl
-    command: korben sync poll
-    # command: tail -f /dev/null
+    # command: korben sync poll
+    command: tail -f /dev/null
 
   korben-sync-ch:
     build:
