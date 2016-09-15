@@ -54,7 +54,7 @@ services:
       - korben-etl
     volumes:
       - ./docker-volumes/korben-sync-ch/cache:/cache
-    command: korben sync ch
+    command: echo not running korben sync ch
 
 
   korben-etl:
@@ -78,7 +78,7 @@ services:
     environment:
       - POSTGRES_DB=datahub_odata
     volumes:
-      - ./data/postgres-odata:/var/lib/postgresql/data
+      - ./docker-volumes/postgres-odata:/var/lib/postgresql/data
 
   postgres-django:
     image: postgres:9.5
