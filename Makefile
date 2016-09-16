@@ -12,6 +12,9 @@ leeloo_lint:
 leeloo_migrate:
 	docker-compose run leeloo python manage.py migrate
 
+leeloo_runserver:
+	docker-compose run leeloo python manage.py runserver 0.0.0.0:8000
+
 leeloo_makemigrations:
 	docker-compose run leeloo python manage.py makemigrations
 
@@ -23,3 +26,9 @@ django_psql:
 
 odata_psql:
 	docker-compose exec postgres-odata psql -U postgres -d datahub_odata
+
+import_companieshouse_companies:
+	docker-compose run korben-sync-poll korben sync ch
+
+sync_companyhouse:
+	docker-compose run korben-sync-poll korben sync es-initial
