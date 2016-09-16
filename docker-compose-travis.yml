@@ -1,0 +1,92 @@
+version: "2"
+services:
+  leeloo:
+    build:
+      context: leeloo
+    volumes:
+      - ./leeloo:/app/leeloo
+    environment:
+      - SECRET_KEY=foobar
+      - UI_SECRET=foobar
+      - DATABASE_URL=${DATABASE_URL}
+    ports:
+      - "8000:8000"
+
+  korben-sync-scrape:
+    build:
+      context: korben
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_ODATA_URL=${DATABASE_ODATA_URL}
+    links:
+      - postgres-django
+      - postgres-odata
+      - es
+    volumes:
+      - ./docker-volumes/korben-sync-scrape/cache:/src/cache
+    command: echo not running korben sync scrape
+
+  korben-sync-poll:
+    build:
+      context: korben
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_ODATA_URL=${DATABASE_ODATA_URL}
+    links:
+      - postgres-django
+      - postgres-odata
+      - korben-etl
+    # command: korben sync poll
+    command: tail -f /dev/null
+
+  korben-sync-ch:
+    build:
+      context: korben
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_ODATA_URL=${DATABASE_ODATA_URL}
+    links:
+      - postgres-django
+      - postgres-odata
+      - korben-etl
+    volumes:
+      - ./docker-volumes/korben-sync-ch/cache:/cache
+    command: echo not running korben sync ch
+
+
+  korben-etl:
+    build:
+      context: korben
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_ODATA_URL=${DATABASE_ODATA_URL}
+    ports:
+      - "9000:8000"
+    links:
+      - postgres-django
+      - postgres-odata
+      - es
+    command: korben etl
+
+  postgres-odata:
+    build:
+      context: postgres-namedatalen
+    restart: always
+    environment:
+      - POSTGRES_DB=datahub_odata
+    volumes:
+      - ./docker-volumes/postgres-odata:/var/lib/postgresql/data
+
+  postgres-django:
+    image: postgres:9.5
+    restart: always
+    environment:
+      - POSTGRES_DB=datahub
+    volumes:
+      - ./docker-volumes/postgres-django:/var/lib/postgresql/data
+
+  es:
+    image: elasticsearch
+    restart: always
+    ports:
+      - "9200:9200"
