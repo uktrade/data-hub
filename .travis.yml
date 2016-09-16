@@ -4,15 +4,15 @@ dist: trusty
 
 language: python
 
-python:
-  - "3.5"
-
 services:
   - docker
 
+install:
+  - pip install coveralls
+
 script:
   - docker-compose build leeloo
-  - docker-compose run leeloo pytest --cov=leeloo --cov-report term-missing --cov-config leeloo/.coveragerc leeloo/
+  - make leeloo_coverage
 
 after_success:
   - coveralls
