@@ -1,4 +1,4 @@
-.PHONY: leeloo_tests leeloo_coverage
+.PHONY: leeloo_tests leeloo_coverage leeloo_lint leeloo_migrate leeloo_makemigrations django_psql odata_psql
 
 leeloo_tests:
 	docker-compose run leeloo pytest
@@ -15,8 +15,11 @@ leeloo_migrate:
 leeloo_makemigrations:
 	docker-compose run leeloo python manage.py makemigrations
 
+leeloo_shellplus:
+	docker-compose run leeloo python manage.py shell_plus --ipython
+
 django_psql:
-	docker-compose exec postgres-django psql -U postgres -d datahub
+	docker-compose exec	 postgres-django psql -U postgres -d datahub
 
 odata_psql:
 	docker-compose exec postgres-odata psql -U postgres -d datahub_odata

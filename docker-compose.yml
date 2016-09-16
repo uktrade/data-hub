@@ -91,3 +91,5 @@ services:
   es:
     image: elasticsearch
     restart: always
+    ports:
+      - "9200:9200"
