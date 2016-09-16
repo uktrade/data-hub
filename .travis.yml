@@ -8,19 +8,11 @@ python:
   - "3.5"
 
 services:
-  - postgres
   - docker
 
-addons:
-  postgresql: "9.5"
-
-
-before_script:
-  - psql -c 'create database datahub;' -U postgres
-
 script:
-  - docker-compose -f docker-compose-travis.yml up leeloo
-  - docker-compose -f docker-compose-travis.yml exec leeloo pytest --cov=leeloo --cov-report term-missing --cov-config leeloo/.coveragerc leeloo/
+  - docker-compose build leeloo
+  - docker-compose run leeloo pytest --cov=leeloo --cov-report term-missing --cov-config leeloo/.coveragerc leeloo/
 
 after_success:
   - coveralls
