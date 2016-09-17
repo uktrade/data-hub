@@ -27,7 +27,7 @@ services:
       - es
     volumes:
       - ./docker-volumes/korben-sync-scrape/cache:/src/cache
-    command: echo not running korben sync scrape
+    command: korben sync scrape
 
   korben-sync-poll:
     build:
@@ -39,8 +39,7 @@ services:
       - postgres-django
       - postgres-odata
       - korben-etl
-    # command: korben sync poll
-    command: tail -f /dev/null
+    command: echo not running korben sync poll
 
   korben-sync-ch:
     build:
@@ -54,7 +53,7 @@ services:
       - korben-etl
     volumes:
       - ./docker-volumes/korben-sync-ch/cache:/cache
-    command: echo not running korben sync ch
+    command: echo not runnin korben sync ch
 
 
   korben-etl:
@@ -69,7 +68,7 @@ services:
       - postgres-django
       - postgres-odata
       - es
-    command: korben etl
+    command: echo not running korben etl
 
   postgres-odata:
     build:
