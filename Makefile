@@ -32,3 +32,9 @@ import_companieshouse_companies:
 
 sync_companyhouse:
 	docker-compose run korben-sync-poll korben sync es-initial
+
+count-odata:
+	docker-compose exec postgres-odata psql -U postgres -d datahub_odata -c "ANALYZE; SELECT relname, n_live_tup FROM pg_stat_user_tables WHERE n_live_tup > 0 ORDER BY n_live_tup DESC;"
+
+count-django:
+	docker-compose exec postgres-django psql -U postgres -d datahub_django -c "ANALYZE; SELECT relname, n_live_tup FROM pg_stat_user_tables WHERE n_live_tup > 0 ORDER BY n_live_tup DESC;"

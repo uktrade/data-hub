@@ -27,7 +27,8 @@ services:
       - es
     volumes:
       - ./docker-volumes/korben-sync-scrape/cache:/src/cache
-    command: korben sync scrape
+    command: tail -f /dev/null
+    # command: ./scrape-forever.sh
 
   korben-sync-poll:
     build:
