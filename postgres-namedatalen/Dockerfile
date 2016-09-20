@@ -31,12 +31,13 @@ VOLUME /var/lib/postgresql/data
 WORKDIR /
 RUN locale-gen en_GB.UTF-8
 RUN update-locale LANG=en_GB.UTF-8 LANGUAGE=en_GB.UTF-8 LC_ALL=en_GB.UTF-8
+ENV POSTGRES_INITDB_ARGS --locale=en_GB.UTF-8
 ADD docker-entrypoint.sh /
 RUN chmod a+x docker-entrypoint.sh
 
 ADD docker-entrypoint-initdb.d /docker-entrypoint-initdb.d
 
-#fix me
+#TODO: application should create tables
 ADD cdms-psql-create.sql /cdms-psql-create.sql
 
 
