@@ -4,24 +4,12 @@ dist: trusty
 
 language: python
 
-python:
-  - "3.5"
-
 services:
-  - postgres
-
-addons:
-  postgresql: "9.5"
-
-install:
-  - pip install -r leeloo/requirements.txt
-  - pip install coveralls
-
-before_script:
-  - psql -c 'create database datahub;' -U postgres
+  - docker
 
 script:
-  - pytest --cov=leeloo --cov-report term-missing --cov-config leeloo/.coveragerc leeloo/
+  - docker-compose build leeloo
+  - make leeloo_coverage
 
 after_success:
   - coveralls

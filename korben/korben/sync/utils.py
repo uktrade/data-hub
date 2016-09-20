@@ -1,5 +1,29 @@
+from logging.handlers import RotatingFileHandler
+import logging
+import multiprocessing
+import os
+import sys
+import threading
+import traceback
+
 from lxml import etree
+
 from . import constants
+
+
+LOGGER = logging.getLogger('korben.sync.utils')
+
+
+def file_leaf(*args):
+    '''
+    Where *args are str, the last str is the name of a file and the preceding
+    str are path fragments, create necessary and suffcient directories for the
+    file to be created at the path.
+    '''
+    path = os.path.join(*map(str, args))
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    return path
+
 
 def handle_multiprop(prop):
     name = etree.QName(prop).localname
@@ -47,11 +71,13 @@ def entry_row(col_names, link_fkey_map, entry):
         import ipdb;ipdb.set_trace()
         pass
     '''
-    for key in row:
-        if key not in col_names:
-            to_pop.append(key)
-    for key in to_pop:
-        row.pop(key)
+    if col_names:
+        # optionally filter by a column set
+        for key in row:
+            if key not in col_names:
+                to_pop.append(key)
+        for key in to_pop:
+            row.pop(key)
     return row
 
 
@@ -74,3 +100,75 @@ def link_fkey_map(table, entry):
         except:  # something happened
             pass
     return link_map
+
+
+class MultiProcessingLog(logging.Handler):
+    def __init__(self, name, mode, maxsize, rotate):
+        logging.Handler.__init__(self)
+
+        self._handler = RotatingFileHandler(name, mode, maxsize, rotate)
+        self.queue = multiprocessing.Queue(-1)
+
+        t = threading.Thread(target=self.receive)
+        t.daemon = True
+        t.start()
+
+    def setFormatter(self, fmt):
+        logging.Handler.setFormatter(self, fmt)
+        self._handler.setFormatter(fmt)
+
+    def receive(self):
+        while True:
+            try:
+                record = self.queue.get()
+                self._handler.emit(record)
+            except (KeyboardInterrupt, SystemExit):
+                raise
+            except EOFError:
+                break
+            except:
+                traceback.print_exc(file=sys.stderr)
+
+    def send(self, s):
+        self.queue.put_nowait(s)
+
+    def _format_record(self, record):
+        # ensure that exc_info and args
+        # have been stringified.  Removes any chance of
+        # unpickleable things inside and possibly reduces
+        # message size sent over the pipe
+        if record.args:
+            record.msg = record.msg % record.args
+            record.args = None
+        if record.exc_info:
+            dummy = self.format(record)
+            record.exc_info = None
+
+        return record
+
+    def emit(self, record):
+        try:
+            s = self._format_record(record)
+            self.send(s)
+        except (KeyboardInterrupt, SystemExit):
+            raise
+        except:
+            self.handleError(record)
+
+    def close(self):
+        self._handler.close()
+        logging.Handler.close(self)
+
+
+def parse_atom_entries(cache_dir, entity_name, name, path=None):
+    'Parse <entry> elements from an XML document in Atom format'
+    if path is None:
+        path = os.path.join(cache_dir, 'atom', entity_name, name)
+    with open(path, 'rb') as cache_fh:
+        try:
+            root = etree.fromstring(cache_fh.read())
+            return root.findall(constants.ENTRY_TAG)
+        except etree.XMLSyntaxError:
+            LOGGER.error('Bad XML!')
+            # scrape failed
+            return

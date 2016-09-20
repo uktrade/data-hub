@@ -7,4 +7,9 @@ loading object dependencies. Make appropriate calls to ETL with fresh data.
 Get a single object, traversing required dependencies.
 
 ## [`poll`](poll.py)
-Poll all supported entity types (ie. those with `ModifiedOn` attribute).
+Poll for new rows in remoted tables mentioned in `etl.spec.MAPPINGS`, make
+updates based on `ModifiedOn` attribute.
+
+## [`populate`](populate.py)
+Load pickled responses, convert their XML content into CSV files and use `COPY`
+to throw them into the database.

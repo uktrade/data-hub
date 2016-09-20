@@ -6,14 +6,15 @@ import pickle
 import time
 import random
 
-import sqlalchemy as sqla
 from lxml import etree
 
 from korben import config
+from korben import etl
+from korben import services
 from korben.cdms_api.rest.api import CDMSRestApi
 
 from .. import constants
-from .. import populate
+from .. import utils as sync_utils
 from . import utils
 from . import constants as scrape_constants
 from . import types
@@ -26,7 +27,7 @@ class LoggingFilter(logging.Filter):
         return not record.getMessage().startswith('requests')
 
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger('korben.sync.scrape.main')
 logging.getLogger().addFilter(LoggingFilter())
 
@@ -42,15 +43,12 @@ except FileNotFoundError:
 PROCESSES = 32
 
 
-
-
-def main():
+def main(names=None):
+    from korben.etl.main import from_odata_xml  # TODO: fix circular dep with sunc.utils
     pool = multiprocessing.Pool(processes=PROCESSES)
     entity_chunks = []
-    spent_path = utils.file_leaf('cache', 'spent')
-    engine = sqla.create_engine(config.database_odata_url)
-    metadata = sqla.MetaData(bind=engine)
-    metadata.reflect()
+    spent_path = sync_utils.file_leaf('cache', 'spent')
+    metadata = services.db.poll_for_metadata(config.database_odata_url)
     try:
         with open(spent_path, 'rb') as spent_fh:
             spent = pickle.load(spent_fh)
@@ -59,9 +57,11 @@ def main():
         spent = set()
         with open(spent_path, 'wb') as spent_fh:
             pickle.dump(spent, spent_fh)
-    for entity_name in set(constants.ENTITY_NAMES) - spent:
+    if names is None:
+        names = etl.spec.MAPPINGS.keys()
+    for entity_name in set(names) - spent:
         try:
-            caches = os.listdir(os.path.join('cache', 'list', entity_name))
+            caches = os.listdir(os.path.join('cache', 'atom', entity_name))
             start = max(map(int, caches)) + 50
         except (FileNotFoundError, ValueError):
             start = 0
@@ -84,7 +84,7 @@ def main():
         if not all(report_conditions):
             continue  # this isn’t a report loop
 
-        print("Ping! {0}".format(now))
+        LOGGER.info("Ping! {0}".format(now))
 
         last_report = now.second
 
@@ -92,7 +92,9 @@ def main():
 
             if entity_chunk.state in (
                 types.EntityChunkState.complete, types.EntityChunkState.spent
-            ): continue  # NOQA
+            ):
+                LOGGER.info("{0} reports complete".format(entity_chunk))
+                continue  # NOQA
 
             # how many tasks pending in total
             pending = sum(
@@ -105,8 +107,19 @@ def main():
             for entity_page in entity_chunk.entity_pages:
                 entity_page.poll()  # updates the state of the EntityPage
                 if entity_page.state == types.EntityPageState.complete:
-                    # make cheeky call to populate
-                    # populate.main('cache', entity_page.entity_name, metadata)
+                    # make cheeky call to etl.load
+                    results = from_odata_xml(
+                        metadata.tables[entity_page.entity_name],
+                        utils.atom_cache_key(
+                            entity_page.entity_name, entity_page.offset
+                        )
+                    )
+                    LOGGER.info(
+                        "{0} rows went into {1}".format(
+                            sum(result.rowcount for result in results),
+                            entity_page.entity_name
+                        )
+                    )
                     continue
                 if entity_page.state == types.EntityPageState.failed:
                     # handle various failure cases
@@ -139,5 +152,6 @@ def main():
             for entity_chunk in entity_chunks
         )
         if all(done):
+            LOGGER.info('All done!')
             exit(1)  # move on
         time.sleep(1)  # don’t spam

@@ -3,6 +3,8 @@ services:
   leeloo:
     build:
       context: leeloo
+    volumes:
+      - ./leeloo:/app/leeloo
     environment:
       - SECRET_KEY=foobar
       - UI_SECRET=foobar
@@ -25,8 +27,8 @@ services:
       - es
     volumes:
       - ./docker-volumes/korben-sync-scrape/cache:/src/cache
-    # command: korben sync scrape
-    command: exit
+    command: tail -f /dev/null
+    # command: ./scrape-forever.sh
 
   korben-sync-poll:
     build:
@@ -38,7 +40,7 @@ services:
       - postgres-django
       - postgres-odata
       - korben-etl
-    command: korben sync poll
+    command: echo not running korben sync poll
 
   korben-sync-ch:
     build:
@@ -52,7 +54,7 @@ services:
       - korben-etl
     volumes:
       - ./docker-volumes/korben-sync-ch/cache:/cache
-    command: korben sync ch
+    command: echo not runnin korben sync ch
 
 
   korben-etl:
@@ -67,7 +69,7 @@ services:
       - postgres-django
       - postgres-odata
       - es
-    command: korben etl
+    command: echo not running korben etl
 
   postgres-odata:
     build:
@@ -76,7 +78,7 @@ services:
     environment:
       - POSTGRES_DB=datahub_odata
     volumes:
-      - ./data/postgres-odata:/var/lib/postgresql/data
+      - ./docker-volumes/postgres-odata:/var/lib/postgresql/data
 
   postgres-django:
     image: postgres:9.5
@@ -89,3 +91,5 @@ services:
   es:
     image: elasticsearch
     restart: always
+    ports:
+      - "9200:9200"

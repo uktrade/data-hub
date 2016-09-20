@@ -1,15 +1,10 @@
-import functools
-import decimal, datetime
+import datetime
+import decimal
 import json
 
 import flask
-import sqlalchemy as sqla
 
-from korben import db
-from . import extract, transform
-
-CONNECTION = None
-METADATA = None
+from .main import from_cdms_psql
 
 app = flask.Flask(__name__)  # NOQA
 
@@ -20,21 +15,14 @@ def handle_data_float(obj):
     elif isinstance(obj, decimal.Decimal):
         return float(obj)
 
-@app.route('/', methods=['POST'])
+
+@app.route('/cdms', methods=['POST'])
 def root():
     retval = {}
     for entity_name, guids in flask.request.json.items():
-        result = extract.from_cdms_psql(METADATA, entity_name, guids)
-        transform_func = functools.partial(
-            transform.from_cdms_psql, METADATA, entity_name
-        )
-        retval[entity_name] = list(map(transform_func, result))
+        retval[entity_name] = from_cdms_psql(entity_name, guids)
     return json.dumps(retval, default=handle_data_float)
 
+
 def main():
-    global CONNECTION
-    CONNECTION = db.poll_for_connection()
-    global METADATA
-    METADATA = sqla.MetaData(bind=CONNECTION)
-    METADATA.reflect()
     app.run('0.0.0.0', '8080')

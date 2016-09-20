@@ -1,32 +1,53 @@
-from django.conf.urls import include, url
-from django.contrib import admin
-from rest_framework import renderers, response, routers, schemas
+import coreapi
+from django.conf.urls import url
+from rest_framework import renderers, response, schemas
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 
-from api.views.chcompanyviewset import CHCompanyViewSet
-from api.views.companyviewset import CompanyViewSet
-from api.views.contactviewset import ContactViewSet
-from api.views.interationviewset import InteractionViewSet
-from api.views.searchview import search
+from search.views import Search
 
 
 @api_view()
 @renderer_classes([SwaggerUIRenderer, OpenAPIRenderer, renderers.CoreJSONRenderer])
 def schema_view(request):
-    generator = schemas.SchemaGenerator(title='Pastebin API')
-    return response.Response(generator.get_schema(request=request))
+    """Generate the OpenAPI schema to render the documentation."""
+    generator = schemas.SchemaGenerator(title='Data hub API')
+    document = generator.get_schema(request=request)
 
+    # create manual doc for search endpoint
+    search_content = {
+        'search': coreapi.Link(
+            url='/search',
+            action='post',
+            fields=[
+                coreapi.Field(
+                    name='term',
+                    required=True,
+                    location='body',
+                    description='Search term.'
+                ),
+                coreapi.Field(
+                    name='offset',
+                    required=False,
+                    location='body',
+                    description='Offset the list of returned results by this amount. Default is zero.'
+                ),
+                coreapi.Field(
+                    name='limit',
+                    required=False,
+                    location='body',
+                    description='Number of items to retrieve. Default is 100.'
+                )
+            ],
+            description='Return companies.'
+        )
+    }
+    # extend document with manually created doc
+    document = document.set_in(('search', ), search_content)
+    return response.Response(document)
 
-router = routers.DefaultRouter()
-router.register(r'ch', CHCompanyViewSet)
-router.register(r'company', CompanyViewSet)
-router.register(r'contact', ContactViewSet)
-router.register(r'interaction', InteractionViewSet)
 
 urlpatterns = [
-    url(r'^search$', search),
+    url(r'^search$', Search.as_view(), name='search'),
     url('^$', schema_view),
-    url(r'^', include(router.urls)),
-    url(r'^admin/', admin.site.urls),
 ]
