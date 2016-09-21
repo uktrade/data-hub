@@ -21,17 +21,23 @@ leeloo-makemigrations:
 leeloo-shellplus:
 	docker-compose run leeloo python manage.py shell_plus --ipython
 
+leeloo-load-metadata:
+	docker-compose run leeloo python manage.py loaddata metadata.yaml
+
 psql-django:
 	docker-compose exec	 postgres-django psql -U postgres -d datahub
 
 psql-odata:
 	docker-compose exec postgres-odata psql -U postgres -d datahub_odata
 
-import_companieshouse_companies:
+import-companieshouse-companies:
 	docker-compose run korben-sync-poll korben sync ch
 
-sync_companyhouse:
+sync-companyhouse:
 	docker-compose run korben-sync-poll korben sync es-initial
+
+sync-django-db:
+	docker-compose run korben-sync-poll korben sync django-initial
 
 PSQL_CSV_OUT = psql -P pager=off -t -A -F"," -U postgres
 
