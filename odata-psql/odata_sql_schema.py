@@ -4,9 +4,8 @@ import tempfile
 import pyslet.odata2.metadata as edmx
 from pyslet.odata2.csdl import Schema
 
-from .. import config
-from . import pgsql_entitycontainer
-from .separate_constraints import main as separate_constraints
+import pgsql_entitycontainer
+from separate_constraints import main as separate_constraints
 
 
 
@@ -20,11 +19,12 @@ def main(name_in):
     with open(name_in, 'rb') as metadata_fh:
         doc.read(metadata_fh)  # would love to be able to cache this but
                                # the `doc` object won't pickle
-    entity_container = doc.root.DataServices[config.odata_entity_container_key]
+        metadata_fh.seek(0)
+    entity_container = doc.root.DataServices[os.environ['ODATA_ENTITY_CONTAINER_KEY']]
     if isinstance(entity_container, Schema):
         entity_container = entity_container.EntityContainer[0]
     # we don't define pgsql_options arg here, since the sql won't load directly
-    # into a database due to lack of dependency resultion
+    # into a database due to circular constraints (in CDMS anyway)
     container = pgsql_entitycontainer.PgSQLEntityContainer(
         container=entity_container
     )
@@ -34,4 +34,4 @@ def main(name_in):
         container.create_all_tables(out=temp_fh)
         # done
         temp_fh.seek(0)
-        return temp_fh.read()
+        return temp_fh.read().decode('utf8')

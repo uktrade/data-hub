@@ -1,0 +1,19 @@
+version: "2"
+services:
+  test-postgres:
+    image: postgres:9.5
+    environment:
+      - POSTGRES_DB=test
+    volumes:
+      - ./docker-volumes/postgres-test:/var/lib/postgresql/data
+      - ./docker-volumes/share:/share
+  test:
+    build:
+      context: .
+    environment:
+      DATABASE_URL: postgresql://postgres@test-postgres/test
+      ODATA_ENTITY_CONTAINER_KEY: ODataDemo
+    links:
+      - test-postgres
+    volumes:
+      - ./docker-volumes/share:/share
