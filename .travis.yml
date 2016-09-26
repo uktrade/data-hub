@@ -11,6 +11,7 @@ script:
   - docker-compose build leeloo
   - make leeloo_coverage
   - make test-odata-psql
+  - make test-korben
 
 after_success:
   - coveralls
