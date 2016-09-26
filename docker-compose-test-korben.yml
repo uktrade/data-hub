@@ -1,0 +1,23 @@
+version: "2"
+services:
+  test:
+    environment: 
+      DATABASE_ODATA_URL: postgres://postgres@test-postgres/test
+      DATABASE_URL: postgres://postgres@test-postgres-django/test_django
+      ES_HOST: es
+      ES_PORT: 9200
+    build:
+      context: korben
+    links:
+      - test-postgres
+      - test-postgres-django
+    # command: tail -f /dev/null
+    command: python setup.py test
+  test-postgres:
+    image: postgres:9.5
+    environment:
+      POSTGRES_DB: test
+  test-postgres-django:
+    image: postgres:9.5
+    environment:
+      POSTGRES_DB: test_django

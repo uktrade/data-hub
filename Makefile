@@ -43,3 +43,6 @@ count-django:
 
 test-odata-psql:
 	cd odata-psql && docker-compose up --build test
+
+test-korben:
+	docker-compose -f docker-compose-test-korben.yml down -v && docker-compose -f docker-compose-test-korben.yml build && docker-compose -f docker-compose-test-korben.yml run --service-ports test

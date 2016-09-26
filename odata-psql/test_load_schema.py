@@ -11,6 +11,7 @@ from separate_constraints import main as separate_constraints
 TEST_SERVICE_URL = 'http://services.odata.org/V2/(S(readwrite))/OData/OData.svc/'
 ATTRIB_BASE = '{http://www.w3.org/XML/1998/namespace}base'
 
+
 def get_connection():
     while True:
         try:
