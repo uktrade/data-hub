@@ -33,7 +33,7 @@ psql-odata:
 import-companieshouse-companies:
 	docker-compose run korben-sync-poll korben sync ch
 
-sync-companyhouse:
+sync-es:
 	docker-compose run korben-sync-poll korben sync es-initial
 
 sync-django-db:
