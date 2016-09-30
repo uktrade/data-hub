@@ -56,5 +56,8 @@ test-odata-psql:
 test-korben-tier0:
 	docker-compose -f test-korben-tier0.yml down -v && docker-compose -f test-korben-tier0.yml build && docker-compose -f test-korben-tier0.yml run --service-ports test
 
+test-korben-tier2:
+	docker-compose -f test-korben-tier2.yml down -v && docker-compose -f test-korben-tier2.yml build && docker-compose -f test-korben-tier2.yml run --service-ports test
+
 test-korben-unit:
 	docker-compose -f test-korben-unit.yml down -v && docker-compose -f test-korben-unit.yml build && docker-compose -f test-korben-unit.yml run --service-ports test
