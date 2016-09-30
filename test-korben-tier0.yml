@@ -12,7 +12,7 @@ services:
       - test-postgres
       - test-postgres-django
     # command: tail -f /dev/null
-    command: python setup.py test
+    command: py.test test/tier0
   test-postgres:
     image: postgres:9.5
     environment:
