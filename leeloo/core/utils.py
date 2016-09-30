@@ -1,31 +1,8 @@
-"""Core utils"""
+def generate_enum_code_from_constant_model(model_queryset):
+    """Generate the Enum code for a given constant model queryset.
 
-from django.conf import settings
-
-from elasticsearch import Elasticsearch
-
-
-def get_elasticsearch_client():
-    """Return an instance of the elasticsearch client or similar."""
-    return Elasticsearch([{
-        'host': settings.ES_HOST,
-        'port': settings.ES_PORT
-    }])
-
-
-def format_es_results(hits):
-    """ES results are contained in a list of dictionaries.
-
-    The key _source contains the actual data, we want to expose that to the upper level.
-    In this way the data set can be directly returned by the view.
+    Paste the generated text into the constants file.
     """
-    results = []
-    for hit in hits:
-        result = {
-            'type': hit['_type'],
-            'id': hit['_id'],
-        }
-        result.update(hit['_source'])
-        results.append(result)
 
-    return results
+    for q in model_queryset:
+        print("{} = Constant('{}', '{}')".format(q.name.replace(' ', '_').lower(), q.name, q.id))

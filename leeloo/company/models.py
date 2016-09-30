@@ -1,49 +1,55 @@
 """Company models."""
+import uuid
 
 from django.conf import settings
 from django.db import models
+from django.utils.functional import cached_property
 
 from core.models import BaseConstantModel, BaseModel
-from core.mixins import ReadOnlyModelMixin
 
 
 MAX_LENGTH = settings.CHAR_FIELD_MAX_LENGTH
 
 
-class BusinessType(ReadOnlyModelMixin, BaseConstantModel):
+class BusinessType(BaseConstantModel):
     """Company business type."""
     pass
 
 
-class Sector(ReadOnlyModelMixin, BaseConstantModel):
+class Sector(BaseConstantModel):
     """Company sector."""
     pass
 
 
-class EmployeeRange(ReadOnlyModelMixin, BaseConstantModel):
+class EmployeeRange(BaseConstantModel):
     """Company employee range."""
     pass
 
 
-class TurnoverRange(ReadOnlyModelMixin, BaseConstantModel):
+class TurnoverRange(BaseConstantModel):
     """Company turnover range."""
     pass
 
 
-class UKRegion(ReadOnlyModelMixin, BaseConstantModel):
+class UKRegion(BaseConstantModel):
     """UK region."""
     pass
 
 
-class Country(ReadOnlyModelMixin, BaseConstantModel):
+class Country(BaseConstantModel):
     """Country."""
     pass
 
 
-class CompanyAbstract(ReadOnlyModelMixin, BaseModel):
+class CompanyAbstract(BaseModel):
     """Share as much as possible in the company representation."""
 
-    company_number = models.CharField(max_length=MAX_LENGTH, null=True, db_index=True)
+    company_number = models.CharField(
+        max_length=MAX_LENGTH,
+        null=True,
+        db_index=True,
+        unique=True
+    )
     name = models.CharField(max_length=MAX_LENGTH, null=True)
     address_1 = models.CharField(max_length=MAX_LENGTH, null=True)
     address_2 = models.CharField(max_length=MAX_LENGTH, null=True)
@@ -57,6 +63,9 @@ class CompanyAbstract(ReadOnlyModelMixin, BaseModel):
     class Meta:
         abstract = True
 
+    def __str__(self):
+        return self.name
+
 
 class Company(CompanyAbstract):
     """Representation of the company as per CDMS.
@@ -65,8 +74,7 @@ class Company(CompanyAbstract):
     It can't be an unmanaged model because Django is in charge of creating the schema and the migrations.
     """
 
-    id = models.UUIDField(primary_key=True, db_index=True)
-    uk_based = models.NullBooleanField(default=True, null=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, db_index=True)
     business_type = models.ForeignKey('BusinessType', null=True)
     sector = models.ForeignKey('Sector', null=True)
     website = models.URLField(null=True)
@@ -76,8 +84,16 @@ class Company(CompanyAbstract):
     uk_region = models.ForeignKey('UKRegion', null=True)
     description = models.TextField(null=True)
 
-    def __str__(self):
-        return self.registered_name
+    @cached_property
+    def companies_house_data(self):
+        """Get the companies house data based on company number."""
+        result = {}
+        if self.company_number:
+            try:
+                result = CompaniesHouseCompany.objects.get(company_number=self.company_number)
+            except CompaniesHouseCompany.DoesNotExist:
+                pass
+        return result
 
 
 class CompaniesHouseCompany(CompanyAbstract):
@@ -93,49 +109,49 @@ class CompaniesHouseCompany(CompanyAbstract):
     incorporation_date = models.DateField(null=True)
 
     def __str__(self):
-        return self.company_name
+        return self.name
 
 
-class InteractionType(ReadOnlyModelMixin, BaseConstantModel):
+class InteractionType(BaseConstantModel):
     """Interaction type."""
     pass
 
 
-class Advisor(ReadOnlyModelMixin, BaseConstantModel):
+class Advisor(BaseConstantModel):
     """Advisor."""
     pass
 
 
-class Interaction(ReadOnlyModelMixin, BaseModel):
+class Interaction(BaseModel):
     """Interaction from CDMS."""
 
-    id = models.UUIDField(primary_key=True, db_index=True)
+    id = models.UUIDField(primary_key=True, db_index=True, default=uuid.uuid4)
     interaction_type = models.ForeignKey('InteractionType', null=True)
     subject = models.TextField(null=True)
     date_of_interaction = models.DateTimeField(null=True)
     advisor = models.ForeignKey('Advisor', null=True)
     notes = models.TextField(null=True)
-    company = models.ForeignKey('Company', null=True)
-    contact = models.ForeignKey('Contact', null=True)
+    company = models.ForeignKey('Company', null=True, related_name='interactions')
+    contact = models.ForeignKey('Contact', null=True, related_name='interactions')
 
     def __str__(self):
         return self.subject
 
 
-class Title(ReadOnlyModelMixin, BaseConstantModel):
+class Title(BaseConstantModel):
     """Contact title."""
     pass
 
 
-class Role(ReadOnlyModelMixin, BaseConstantModel):
+class Role(BaseConstantModel):
     """Contact role."""
     pass
 
 
-class Contact(ReadOnlyModelMixin, BaseModel):
+class Contact(BaseModel):
     """Contact from CDMS."""
 
-    id = models.UUIDField(primary_key=True, db_index=True)
+    id = models.UUIDField(primary_key=True, db_index=True, default=uuid.uuid4)
     title = models.ForeignKey('Title', null=True)
     name = models.CharField(max_length=MAX_LENGTH, null=True)
     role = models.ForeignKey('Role', null=True)
@@ -150,8 +166,8 @@ class Contact(ReadOnlyModelMixin, BaseModel):
     alt_phone = models.CharField(max_length=MAX_LENGTH, null=True)
     alt_email = models.EmailField(null=True)
     notes = models.TextField(null=True)
-    company = models.ForeignKey('Company', null=True)
+    company = models.ForeignKey('Company', null=True, related_name='contacts')
     primary_contact_team = models.TextField(null=True)
 
     def __str__(self):
-        return "{0} {1}".format(self.first_name, self.last_name)
+        return self.name

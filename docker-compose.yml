@@ -15,7 +15,7 @@ services:
       - postgres-django
       - es
 
-  korben-sync-scrape:
+  korben:
     build:
       context: korben
     environment:
@@ -26,50 +26,9 @@ services:
       - postgres-odata
       - es
     volumes:
-      - ./docker-volumes/korben-sync-scrape/cache:/src/cache
+      - ./docker-volumes/korben/cache:/src/cache
+      - ./docker-volumes/korben/cache:/cache
     command: tail -f /dev/null
-    # command: ./scrape-forever.sh
-
-  korben-sync-poll:
-    build:
-      context: korben
-    environment:
-      - DATABASE_URL=${DATABASE_URL}
-      - DATABASE_ODATA_URL=${DATABASE_ODATA_URL}
-    links:
-      - postgres-django
-      - postgres-odata
-      - korben-etl
-    command: echo not running korben sync poll
-
-  korben-sync-ch:
-    build:
-      context: korben
-    environment:
-      - DATABASE_URL=${DATABASE_URL}
-      - DATABASE_ODATA_URL=${DATABASE_ODATA_URL}
-    links:
-      - postgres-django
-      - postgres-odata
-      - korben-etl
-    volumes:
-      - ./docker-volumes/korben-sync-ch/cache:/cache
-    command: echo not runnin korben sync ch
-
-
-  korben-etl:
-    build:
-      context: korben
-    environment:
-      - DATABASE_URL=${DATABASE_URL}
-      - DATABASE_ODATA_URL=${DATABASE_ODATA_URL}
-    ports:
-      - "9000:8000"
-    links:
-      - postgres-django
-      - postgres-odata
-      - es
-    command: echo not running korben etl
 
   postgres-odata:
     build:

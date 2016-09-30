@@ -1,15 +1,12 @@
-"""Mixins."""
+"""General mixins."""
 
-from django.core.exceptions import PermissionDenied
+from es.services import save_model
 
 
-class ReadOnlyModelMixin:
-    """Prevents models from adding, deleting and updating."""
+class DeferredSaveModelMixin:
+    """Handles add and update models."""
 
     def save(self, *args, **kwargs):
-        """Save is not allowed."""
-        raise PermissionDenied('This model is read-only')
-
-    def delete(self, *args, **kwargs):
-        """Delete is not allowed."""
-        raise PermissionDenied('This model is read-only')
+        """Save is temporarily allowed, also write to ES."""
+        super().save(*args, **kwargs)
+        save_model(self)

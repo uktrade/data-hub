@@ -1,10 +1,18 @@
 import coreapi
-from django.conf.urls import url
-from rest_framework import renderers, response, schemas
+from django.conf.urls import url, include
+from rest_framework import renderers, response, routers, schemas
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
 
+from company.views import CompanyViewSet, CompaniesHouseCompanyReadOnlyViewSet, ContactViewSet, InteractionViewSet
 from search.views import Search
+
+
+router = routers.SimpleRouter()
+router.register(r'company', CompanyViewSet)
+router.register(r'ch-company', CompaniesHouseCompanyReadOnlyViewSet)
+router.register(r'contact', ContactViewSet)
+router.register(r'interaction', InteractionViewSet)
 
 
 @api_view()
@@ -48,6 +56,8 @@ def schema_view(request):
 
 
 urlpatterns = [
-    url(r'^search$', Search.as_view(), name='search'),
     url('^$', schema_view),
+    url(r'^', include(router.urls)),
+    url(r'^search$', Search.as_view(), name='search'),
+    url(r'^metadata/', include('company.metadata_urls')),
 ]
