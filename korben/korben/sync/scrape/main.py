@@ -40,7 +40,7 @@ try:
 except FileNotFoundError:
     ENTITY_NAMES = constants.ENTITY_NAMES
 
-PROCESSES = 64
+PROCESSES = 32
 
 
 def main(names=None, api_instance=None):
@@ -53,6 +53,11 @@ def main(names=None, api_instance=None):
     else:
         api = api_instance
 
+    from korben.etl.main import from_odata_xml  # TODO: fix circular dep with sunc.utils
+    if names is None:
+        names = etl.spec.MAPPINGS.keys()
+    else:
+        names = set(names.split(','))
     pool = multiprocessing.Pool(processes=PROCESSES)
     entity_chunks = []
     spent_path = sync_utils.file_leaf('cache', 'spent')
@@ -65,18 +70,13 @@ def main(names=None, api_instance=None):
         spent = set()
         with open(spent_path, 'wb') as spent_fh:
             pickle.dump(spent, spent_fh)
-    if names is None:
-        names = set(etl.spec.MAPPINGS.keys())
-    else:
-        names = set(names.split(','))
     for entity_name in names - spent:
         try:
-            caches = tuple(map(
-                int, os.listdir(os.path.join('cache', 'json', entity_name))
-            ))
-            for index, page_number in enumerate(caches[1:]):
-                if caches[index - 1] != page_number - 50:
-                    start = caches[index - 1]
+            caches = sorted(map(int,
+                os.listdir(os.path.join('cache', 'json', entity_name))))
+            for index, offset in list(enumerate(caches))[1:]:
+                if caches[index - 1] != offset - 50:
+                    start = caches[index - 1] + 50
                     LOGGER.info(
                         "In a previous run {0} broke at {1}".format(
                             entity_name, start
@@ -99,13 +99,13 @@ def main(names=None, api_instance=None):
         now = datetime.datetime.now()
         report_conditions = (
             now.second,
-            now.second % 5 == 0,
+            now.second % 2 == 0,
             last_report != now.second,
         )
         if not all(report_conditions):
             continue  # this isn’t a report loop
 
-        LOGGER.info("Ping! {0}".format(now))
+        LOGGER.info("{0}".format(now.strftime("%Y-%m-%d %H:%M:%S")))
 
         last_report = now.second
 

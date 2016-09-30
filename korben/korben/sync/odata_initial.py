@@ -23,11 +23,6 @@ def resp_csv(cache_dir, csv_dir, col_names, entity_name, page):
         return None, None
     csv_path = os.path.join(csv_dir, page)
     if os.path.isfile(csv_path):
-        '''
-        print("CSV exists for {0}/{1}, using existing data".format(
-            entity_name, page
-        ))
-        '''
         return None, csv_path
     csv_fh = open(csv_path, 'w')
     writer = csv.DictWriter(csv_fh, col_names, dialect='excel')
@@ -43,7 +38,7 @@ def entity_csv(cache_dir, col_names, entity_name, start=0):
     csv_dir = os.path.join(cache_dir, 'csv', entity_name)
     pages = list(
         filter(
-            lambda P: int(P) > start,
+            lambda P: int(P) >= start,
             sorted(
                 os.listdir(os.path.join(cache_dir, 'json', entity_name)),
                 key=int,
@@ -62,7 +57,10 @@ def entity_csv(cache_dir, col_names, entity_name, start=0):
             rowcount += n_rows
         elif csv_path:
             csv_paths.append(csv_path)
-            rowcount += 49.9
+            with open(csv_path) as csv_fh:
+                for i, _ in enumerate(csv_fh):
+                    pass
+                rowcount += i + 1
     LOGGER.info("{0} rows for {1}".format(rowcount, entity_name))
     if len(pages) and not rowcount:
         raise Exception(csv_path)
@@ -76,7 +74,7 @@ def csv_psql(cursor, csv_path, table):
             '''COPY "{0}" FROM STDIN DELIMITER ',' CSV'''.format(table.name),
             csv_fh
         )
-        # cursor.copy_from(csv_fh, '"{0}"'.format(table.name), sep=',', null=None)
+        cursor.connection.commit()
 
 
 def populate_entity(cache_dir, metadata, entity_name):
@@ -90,8 +88,9 @@ def populate_entity(cache_dir, metadata, entity_name):
             cursor = metadata.bind.connection.cursor()
             csv_psql(cursor, csv_path, table)
         except Exception as exc:
-            print("csv_psq call failed for {0} failed".format(csv_path))
-            print(exc)
+            metadata.bind.connection.rollback()
+            LOGGER.info("csv_psq call failed for {0} failed".format(csv_path))
+            LOGGER.error(exc)
 
 
 def main(cache_dir='cache', entity_name=None, metadata=None):
