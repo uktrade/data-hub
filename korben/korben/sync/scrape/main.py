@@ -43,8 +43,16 @@ except FileNotFoundError:
 PROCESSES = 64
 
 
-def main(names=None):
-    from korben.etl.main import from_odata_xml  # TODO: fix circular dep with sunc.utils
+def main(names=None, api_instance=None):
+    from korben.etl.main import from_odata_json  # TODO: fix circular dep with sync.utils
+
+    global api
+    if api_instance is None:
+        api = CDMSRestApi()
+        api.auth.setup_session(True)
+    else:
+        api = api_instance
+
     pool = multiprocessing.Pool(processes=PROCESSES)
     entity_chunks = []
     spent_path = sync_utils.file_leaf('cache', 'spent')
@@ -58,11 +66,13 @@ def main(names=None):
         with open(spent_path, 'wb') as spent_fh:
             pickle.dump(spent, spent_fh)
     if names is None:
-        names = etl.spec.MAPPINGS.keys()
-    for entity_name in set(names.split(',')) - spent:
+        names = set(etl.spec.MAPPINGS.keys())
+    else:
+        names = set(names.split(','))
+    for entity_name in names - spent:
         try:
             caches = tuple(map(
-                int, os.listdir(os.path.join('cache', 'atom', entity_name))
+                int, os.listdir(os.path.join('cache', 'json', entity_name))
             ))
             for index, page_number in enumerate(caches[1:]):
                 if caches[index - 1] != page_number - 50:
@@ -78,10 +88,9 @@ def main(names=None):
         except (FileNotFoundError, ValueError):
             start = 0
         end = start + (scrape_constants.CHUNKSIZE * scrape_constants.PAGESIZE)
-        entity_chunks.append(classes.EntityChunk(entity_name, start, end))
-    global api
-    api = CDMSRestApi()
-    api.auth.setup_session(True)
+        entity_chunks.append(
+            classes.EntityChunk(api, entity_name, start, end)
+        )
     last_report = 0
 
     while True:  # take a deep breath
@@ -120,16 +129,18 @@ def main(names=None):
                 entity_page.poll()  # updates the state of the EntityPage
                 if entity_page.state == types.EntityPageState.complete:
                     # make cheeky call to etl.load
-                    results = from_odata_xml(
+                    results = from_odata_json(
                         metadata.tables[entity_page.entity_name],
-                        utils.atom_cache_key(
+                        utils.json_cache_key(
                             entity_page.entity_name, entity_page.offset
                         )
                     )
                     LOGGER.info(
                         "Records {0}-{1} went into {2}".format(
                             entity_page.offset,
-                            entity_page.offset + sum(result.rowcount for result in results),
+                            entity_page.offset + sum(
+                                result.rowcount for result in results
+                            ),
                             entity_page.entity_name
                         )
                     )
@@ -154,7 +165,7 @@ def main(names=None):
                             )
                         )
                     if isinstance(entity_page.exception, types.EntityPageDeAuth):
-                        api.setup_session(True)
+                        api.auth.setup_session(True)
             entity_chunk.poll()  # update state of EntityChunk
 
         done = (  # ask if all the EntityChunks are done
@@ -166,6 +177,9 @@ def main(names=None):
             for entity_chunk in entity_chunks
         )
         if all(done):
-            LOGGER.info('All done!')
-            exit(1)  # move on
+            LOGGER.info('Waiting for Pool.close ...')
+            pool.close()
+            LOGGER.info('Waiting for Pool.join ...')
+            pool.join()
+            return  # TODO: add exit(1) somewhere else to signal to bash
         time.sleep(1)  # don’t spam

@@ -14,10 +14,13 @@ class CDMSRestApi(object):
             auth (Optional): An authentication instance. Defaults to a default
                 instance of ActiveDirectoryAuth.
         """
-        self.CRM_REST_BASE_URL = '/'.join([
-            config.cdms_base_url.rstrip('/'),
-            'XRMServices/2011/OrganizationData.svc'
-        ])
+        if '.svc' not in config.cdms_base_url:
+            self.CRM_REST_BASE_URL = '/'.join([
+                config.cdms_base_url.rstrip('/'),
+                'XRMServices/2011/OrganizationData.svc'
+            ])
+        else:
+            self.CRM_REST_BASE_URL = config.cdms_base_url
 
         if auth is not None:
             self.auth = auth
@@ -73,7 +76,7 @@ class CDMSRestApi(object):
                 found or resource that matches service name does not exist.
             ErrorResponseException: If guid is not valid.
         """
-        url = "{base_url}/{service}(guid'{guid}')".format(
+        url = "{base_url}/{service}({guid})".format(
             base_url=self.CRM_REST_BASE_URL,
             service=service,
             guid=guid
@@ -102,7 +105,7 @@ class CDMSRestApi(object):
             ErrorResponseException: If there is an error with the POST request
                 that makes the update.
         """
-        url = "{base_url}/{service}(guid'{guid}')".format(
+        url = "{base_url}/{service}({guid})".format(
             base_url=self.CRM_REST_BASE_URL,
             service=service,
             guid=guid
@@ -157,7 +160,7 @@ class CDMSRestApi(object):
                 found.
             ErrorResponseException: If provided guid is not valid.
         """
-        url = "{base_url}/{service}(guid'{guid}')".format(
+        url = "{base_url}/{service}({guid})".format(
             base_url=self.CRM_REST_BASE_URL,
             service=service,
             guid=guid

@@ -40,3 +40,12 @@ count-odata:
 
 count-django:
 	docker-compose exec postgres-django ${PSQL_CSV_OUT} -d datahub -c "SELECT relname, n_live_tup FROM pg_stat_user_tables WHERE n_live_tup > 0 ORDER BY n_live_tup DESC;"
+
+test-odata-psql:
+	cd odata-psql && docker-compose up --build test
+
+test-korben-tier0:
+	docker-compose -f test-korben-tier0.yml down -v && docker-compose -f test-korben-tier0.yml build && docker-compose -f test-korben-tier0.yml run --service-ports test
+
+test-korben-unit:
+	docker-compose -f test-korben-unit.yml down -v && docker-compose -f test-korben-unit.yml build && docker-compose -f test-korben-unit.yml run --service-ports test
