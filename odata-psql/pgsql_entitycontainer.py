@@ -67,7 +67,8 @@ class PgSQLEntityContainer(sqlds.SQLEntityContainer):
 
     def mangle_name(self, source_path):
         'Just go for whatever, apart from less long. Seems to be OK'
-        return super().mangle_name(source_path)[:63]  # crop col name
+        mangled_name = super().mangle_name(source_path).strip('"')
+        return '"{0}"'.format(mangled_name[:63])
 
 
     def open(self):
