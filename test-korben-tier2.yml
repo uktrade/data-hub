@@ -1,0 +1,37 @@
+version: "2"
+services:
+  test:
+    environment:
+      DATABASE_ODATA_URL: postgres://postgres@test-postgres/test
+      DATABASE_URL: postgres://postgres@test-postgres-django/test_django
+      ES_HOST: es
+      ES_PORT: 9200
+
+      # magical secrets below
+      CDMS_ADFS_URL: ${CDMS_ADFS_URL}
+      CDMS_BASE_URL: ${CDMS_BASE_URL}
+      CDMS_USERNAME: ${CDMS_USERNAME}
+      CDMS_PASSWORD: ${CDMS_PASSWORD}
+      CDMS_COOKIE_KEY: ${CDMS_COOKIE_KEY}
+      CDMS_RSTS_URL: ${CDMS_RSTS_URL}
+      CDMS_COOKIE_PATH: ${CDMS_COOKIE_PATH}
+      ODATA_ENTITY_CONTAINER_KEY: ${ODATA_ENTITY_CONTAINER_KEY}
+    build:
+      context: korben
+    links:
+      - test-postgres
+      - test-postgres-django
+    command: py.test test/tier2
+  test-postgres:
+    build:
+      context: postgres-namedatalen
+    restart: always
+    environment:
+      - POSTGRES_DB=test
+    volumes:
+      - ./docker-volumes-test/postgres-odata:/var/lib/postgresql/data
+
+  test-postgres-django:
+    image: postgres:9.5
+    environment:
+      POSTGRES_DB: test_django
