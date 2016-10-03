@@ -46,8 +46,7 @@ services:
       - "8080:8080"
 
   postgres-odata:
-    build:
-      context: postgres-namedatalen
+    image: postgres:9.5
     restart: always
     environment:
       - POSTGRES_DB=datahub_odata
