@@ -8,7 +8,6 @@ def main(name_in, name_out=None):
     create, alter = separate_constraints(odata_sql_schema(name_in))
     if not name_out:
         print(create)
-        print(alter)
         return
     with open("{0}-create.sql".format(name_out), 'w') as create_fh:
         create_fh.write(create)

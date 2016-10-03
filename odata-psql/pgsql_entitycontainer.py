@@ -48,6 +48,7 @@ class PgSQLEntityContainer(sqlds.SQLEntityContainer):
         super(PgSQLEntityContainer, self).__init__(dbapi=psycopg2, **kwargs)
         self.pgsql_options = pgsql_options
         self.ParamsClass = PyFormatParams
+        import ipdb;ipdb.set_trace()
 
     def get_collection_class(self):
         'Overridden to return :py:class:`PgSQLEntityCollection`'
@@ -68,8 +69,10 @@ class PgSQLEntityContainer(sqlds.SQLEntityContainer):
     def mangle_name(self, source_path):
         'Just go for whatever, apart from less long. Seems to be OK'
         mangled_name = super().mangle_name(source_path).strip('"')
+        if mangled_name in self.mangled_names:
+            import ipdb;ipdb.set_trace()
+            pass
         return '"{0}"'.format(mangled_name[:63])
-
 
     def open(self):
         'Calls the underlying connect method.'
