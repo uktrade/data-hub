@@ -65,6 +65,11 @@ class PgSQLEntityContainer(sqlds.SQLEntityContainer):
         'Overridden to return :py:class:`PgSQLReverseKeyCollection`'
         return PgSQLReverseKeyCollection
 
+    def mangle_name(self, source_path):
+        'Just go for whatever, apart from less long. Seems to be OK'
+        return super().mangle_name(source_path)[:63]  # crop col name
+
+
     def open(self):
         'Calls the underlying connect method.'
         # we don't need to connect, this code is only used for dumping SQL
