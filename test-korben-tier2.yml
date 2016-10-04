@@ -21,6 +21,7 @@ services:
     links:
       - test-postgres
       - test-postgres-django
+      - test-leeloo
     command: py.test test/tier2
 
   test-postgres:
@@ -34,3 +35,15 @@ services:
     image: postgres:9.5
     environment:
       POSTGRES_DB: test_django
+
+  test-leeloo:
+    build:
+      context: leeloo
+    environment:
+      SECRET_KEY: foobar
+      UI_SECRET: foobar
+      DATABASE_URL: postgres://postgres@test-postgres-django/test_django
+    links:
+      - test-postgres-django
+    ports:
+      - "8000:8000"
