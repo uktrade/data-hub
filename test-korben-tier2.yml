@@ -22,14 +22,13 @@ services:
       - test-postgres
       - test-postgres-django
     command: py.test test/tier2
+
   test-postgres:
     build:
       context: postgres-namedatalen
     restart: always
     environment:
       - POSTGRES_DB=test
-    volumes:
-      - ./docker-volumes-test/postgres-odata:/var/lib/postgresql/data
 
   test-postgres-django:
     image: postgres:9.5
