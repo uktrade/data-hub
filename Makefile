@@ -36,11 +36,11 @@ psql-odata:
 korben-sync-ch:
 	docker-compose exec korben korben sync ch
 
-korben-sync-es-initial:
-	docker-compose exec korben korben sync es-initial
+korben-sync-es:
+	docker-compose exec korben korben sync es
 
-korben-sync-django-initial:
-	docker-compose exec korben korben sync django-initial
+korben-sync-django:
+	docker-compose exec korben korben sync django
 
 PSQL_CSV_OUT = psql -P pager=off -t -A -F"," -U postgres
 

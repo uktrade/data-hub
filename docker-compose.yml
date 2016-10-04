@@ -30,7 +30,9 @@ services:
     volumes:
       - ./docker-volumes/korben/cache:/src/cache
       - ./docker-volumes/korben/cache:/cache
-    command: tail -f /dev/null
+    command: korben bau
+    ports:
+      - "8080:8080"
 
   postgres-odata:
     build:
