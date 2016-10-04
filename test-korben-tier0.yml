@@ -11,8 +11,7 @@ services:
     links:
       - test-postgres
       - test-postgres-django
-    # command: tail -f /dev/null
-    command: py.test test/tier0
+    command: py.test test/tier0/bau
   test-postgres:
     image: postgres:9.5
     environment:
