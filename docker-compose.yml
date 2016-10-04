@@ -21,6 +21,8 @@ services:
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - DATABASE_ODATA_URL=${DATABASE_ODATA_URL}
+      - ES_HOST=${ES_HOST}
+      - ES_PORT=${ES_PORT}
     links:
       - postgres-django
       - postgres-odata
