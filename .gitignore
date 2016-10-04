@@ -72,3 +72,4 @@ import.sh
 
 # docker things
 docker-volumes/
+.env
