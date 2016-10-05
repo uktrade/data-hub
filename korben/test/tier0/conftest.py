@@ -16,7 +16,7 @@ from django.conf import settings as django_settings_module
 from lxml import etree
 
 from korben import config
-from korben.cdms_api.rest.api import CDMSRestApi
+from korben.cdms_api.rest import api
 from korben.cdms_api.rest.auth.noop import NoopAuth
 from korben.etl import spec as etl_spec
 from korben.services import db as korben_db
@@ -36,11 +36,11 @@ SELECT relname, n_live_tup FROM pg_stat_user_tables
 
 
 @pytest.fixture
-def odata_test_service(request):
+def odata_test_service():
     resp = requests.get(ODATA_URL)
     root = etree.fromstring(resp.content)
     config.cdms_base_url = root.attrib[ATOM_PREFIX + 'base']
-    client = CDMSRestApi(NoopAuth())
+    client = api.CDMSRestApi(NoopAuth())
     return client
 
 
@@ -54,14 +54,22 @@ TEST_MAPPINGS = {
     },
     'Suppliers': {
         'to': 'suppliers',
+        'etag': True,
         'local': (
             ('ID', 'id'),
-            ('Address_Street', 'address_street'),
-            ('Address_City', 'address_city'),
-            ('Address_State', 'address_state'),
-            ('Address_ZipCode', 'address_zipcode'),
-            ('Address_Country', 'address_country'),
             ('Concurrency', 'concurrency'),
+        ),
+        'nonflat': (
+            (
+                'Address',
+                (
+                    ('Street', 'address_street'),
+                    ('City', 'address_city'),
+                    ('State', 'address_state'),
+                    ('ZipCode', 'address_zipcode'),
+                    ('Country', 'address_country'),
+                ),
+            ),
         ),
     },
     'Products': {

@@ -1,7 +1,9 @@
 import pytest
 
-import re
 import datetime
+import re
+import time
+
 from korben.utils import could_be_a_date_value
 
 
@@ -61,10 +63,12 @@ def test_modifiedon_update(cdms_client, account_object):
     initial_modifiedon = account_object['ModifiedOn']
     update_resp = cdms_client.update(
         'AccountSet',
+        False,
         "guid'{0}'".format(account_object['AccountId']),
         {'Name': 'Hush now'},
     )
     assert update_resp.ok
+    time.sleep(1)
     get_resp = cdms_client.get(
         'AccountSet', "guid'{0}'".format(account_object['AccountId']),
     )
