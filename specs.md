@@ -18,3 +18,49 @@ Document containing specification for models in Korben and Leeloo, with caveats 
 | `optevia_TownCity` | `← *` | `registered_address_towncity` | Address town/city | Korben sends `N/A` |
 | `optevia_StateCounty` | | `registered_address_county` | Address county | |
 | `optevia_Country_Id` | `← * →` | `registered_address_country_id` | Address country | |
+| | | `trading_address_1` | Address line 1 | If any of the trading address is added, then required fields follow from the above|
+| | | `trading_address_2` | Address line 2 | |
+| | | `trading_address_3` | Address line 3 | |
+| | | `trading_address_4` | Address line 4 | |
+| | | `trading_address_towncity` | Address town/city | |
+| | | `trading_address_county` | Address county | |
+| | | `trading_address_country_id` | Address country | |
+| | | `account_manager_id` | Agreed account manager | |
+| | | `export_to_countries` | Export market | Django M2M |
+| | | `future_interest_contires` | Future contries of interest | Django M2M |
+
+### Company address display preferences
+
+The order of preference for *registered address* is as follows:
+
+ - Companies House registered address
+ - CDMS “registered” address
+
+There is only one source for *trading address*, that is Data Hub.
+
+## Contact
+
+| CDMS | Required | Leeloo | Display | Comments |
+|:---:|:---:|:---:|:---:|---|
+| `Title` | `* →` | `title_id` | Title | |
+| `FirstName` | `← * →` | `first_name` | First name(s) | |
+| `LastName` | `← * →` | `last_name` | Last name | |
+| `MiddleName` | | | | Data migration case |
+| `optevia_LastVerified` | `← *` | | | Korben should add current date on write |
+| `ParentCustomerId_Id` | `← * →` | `company_id` | Company | |
+| `optevia_PrimaryContact` | `* →` | `primary` | Is primary contact | |
+| | `* →` | `teams` | Teams | Django M2M |
+| `optevia_CountryCode` | `← * →` | `telephone_countrycode` | Telephone country code | |
+| `optevia_AreaCode` `++` `optevia_TelephoneNumber` | `← * →` | `telephone_number` | Telephone number | Korben to fill area code |
+| `EMailAddress1` | `← * →` | `email` | Email address | |
+| `optevia_Address1` | `← *` | `address_1` | Address line 1 | |
+| `optevia_Address2` | | `address_2` | Address line 2 | |
+| `optevia_Address3` | | `address_3` | Address line 3 | |
+| `optevia_Address4` | | `address_4` | Address line 4 | |
+| `optevia_TownCity` | `← *` | `address_towncity` | Address town/city | Korben sends `N/A` |
+| `optevia_StateCounty` | | `address_county` | Address county | |
+| `optevia_Country_Id` | `← *` | `address_country_id` | Address country | |
+| | `* →` | `address_same_as_company` | Address same as company | Leeloo to send company address if this is set to true |
+| `optevia_UKRegion_Id` | `← * →` | `uk_region_id` | UK region |
+| | | `telephone_alternative` | Alternative telephone | |
+| | | `email_alternative` | Alternative email address | |
