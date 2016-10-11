@@ -6,8 +6,9 @@ Document containing specification for models in Korben and Leeloo, with caveats 
 
 | CDMS | Required | Leeloo | Display | Comments |
 |:---:|:---:|:---:|:---:|---|
-| `Name` | `← * →` | `name` | Registered name | _Companies House_ XOR _CDMS name_ |
+| `Name` | `← * →` | `name` | Registered name | _Companies House name_ **XOR** _CDMS name_ |
 | `optevia_Alias` | | `alias` | Trading name | |
+| `optevia_CompaniesHouseNumber` | | `company_number` | Companies House number | |
 | `optevia_ukorganisation` | `← *` |  | UK based | Inferred property |
 | `optevia_BusinessType_Id` | `* →` | `business_type_id` | Type of business | |
 | `optevia_Sector_Id` | `← * →` | `sector_id` | Sector | |
@@ -15,15 +16,17 @@ Document containing specification for models in Korben and Leeloo, with caveats 
 | `optevia_Address2` | | `registered_address_2` | Address line 2 | |
 | `optevia_Address3` | | `registered_address_3` | Address line 3 | |
 | `optevia_Address4` | | `registered_address_4` | Address line 4 | |
-| `optevia_TownCity` | `← *` | `registered_address_towncity` | Address town/city | Korben sends `N/A` |
+| `optevia_TownCity` | `← *` | `registered_address_town` | Address town | Korben sends `N/A` in case of no value |
 | `optevia_StateCounty` | | `registered_address_county` | Address county | |
+| `optevia_PostCode` | | `registered_address_postcode` | Address postcode | |
 | `optevia_Country_Id` | `← * →` | `registered_address_country_id` | Address country | |
 | | | `trading_address_1` | Address line 1 | If any of the trading address is added, then required fields follow from the above|
 | | | `trading_address_2` | Address line 2 | |
 | | | `trading_address_3` | Address line 3 | |
 | | | `trading_address_4` | Address line 4 | |
-| | | `trading_address_towncity` | Address town/city | |
+| | | `trading_address_town` | Address town | |
 | | | `trading_address_county` | Address county | |
+| | | `trading_address_postcode` | Address postcode | |
 | | | `trading_address_country_id` | Address country | |
 | | | `account_manager_id` | Agreed account manager | |
 | | | `export_to_countries` | Export market | Django M2M |
@@ -57,8 +60,9 @@ There is only one source for *trading address*, that is Data Hub.
 | `optevia_Address2` | | `address_2` | Address line 2 | |
 | `optevia_Address3` | | `address_3` | Address line 3 | |
 | `optevia_Address4` | | `address_4` | Address line 4 | |
-| `optevia_TownCity` | `← *` | `address_towncity` | Address town/city | Korben sends `N/A` |
+| `optevia_TownCity` | `← *` | `address_town` | Address town | Korben sends `N/A` |
 | `optevia_StateCounty` | | `address_county` | Address county | |
+| `optevia_PostCode` | | `address_postcode` | Address postcode | |
 | `optevia_Country_Id` | `← *` | `address_country_id` | Address country | |
 | | `* →` | `address_same_as_company` | Address same as company | Leeloo to send company address if this is set to true |
 | `optevia_UKRegion_Id` | `← * →` | `uk_region_id` | UK region |
