@@ -35,12 +35,6 @@ ENV POSTGRES_INITDB_ARGS --locale=en_GB.UTF-8
 ADD docker-entrypoint.sh /
 RUN chmod a+x docker-entrypoint.sh
 
-ADD docker-entrypoint-initdb.d /docker-entrypoint-initdb.d
-
-#TODO: application should create tables
-ADD cdms-psql-create.sql /cdms-psql-create.sql
-
-
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 EXPOSE 5432
