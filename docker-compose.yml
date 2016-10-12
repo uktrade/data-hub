@@ -67,3 +67,5 @@ services:
     restart: always
     ports:
       - "9200:9200"
+    volumes:
+      - ./docker-volumes/es:/usr/share/elasticsearch/data
