@@ -1,0 +1,55 @@
+version: "2"
+services:
+  leeloo:
+    build:
+      context: leeloo
+    volumes:
+      - ./leeloo:/app/leeloo
+    environment:
+      SECRET_KEY: foobar
+      UI_SECRET: foobar
+      DATABASE_URL: ${DATABASE_URL}
+      ES_INDEX: test
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres-django
+      - es
+      - dummy-korben
+    networks:
+      - datahub
+
+  dummy-korben:
+    build:
+      context: dummy-korben
+    depends_on:
+      - postgres-django
+    networks:
+      - datahub
+    command: korben bau
+    ports:
+      - "8080:8080"
+
+  postgres-django:
+    image: postgres:9.5
+    restart: always
+    environment:
+      - POSTGRES_DB=datahub
+    networks:
+      - datahub
+    volumes:
+      - ./docker-volumes/postgres-django:/var/lib/postgresql/data
+
+  es:
+    image: elasticsearch
+    restart: always
+    ports:
+      - "9200:9200"
+    networks:
+      - datahub
+    volumes:
+      - ./docker-volumes/es:/usr/share/elasticsearch/data
+
+networks:
+  datahub:
+    driver: bridge
