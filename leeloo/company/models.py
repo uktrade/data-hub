@@ -2,6 +2,7 @@
 import uuid
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.functional import cached_property
 
@@ -91,7 +92,7 @@ class Company(CompanyAbstract):
         blank=True,
         related_name='company_future_interest_countries'
     )
-    description = models.TextField(null=True)
+    description = models.TextField(blank=True)
     trading_address_1 = models.CharField(max_length=MAX_LENGTH, blank=True)
     trading_address_2 = models.CharField(max_length=MAX_LENGTH, blank=True)
     trading_address_3 = models.CharField(max_length=MAX_LENGTH, blank=True)
@@ -119,6 +120,31 @@ class Company(CompanyAbstract):
     def registered_name(self):
         """Use the CH name, if there's one, else the name."""
         return self.companies_house_data.name if self.companies_house_data else self.name
+
+    def clean(self):
+        """Custom validation for trading address.
+
+        Trading address fields are not mandatory in the model definition,
+        if one of the fields is used then address_1, town and country have to be filled in.
+        """
+        some_address_fields_existence = any((
+            self.trading_address_1,
+            self.trading_address_2,
+            self.trading_address_3,
+            self.trading_address_4,
+            self.trading_address_town,
+            self.trading_address_county,
+            self.trading_address_postcode,
+            self.trading_address_country
+        ))
+        all_required_fields_existence = all((
+            self.trading_address_1,
+            self.trading_address_country,
+            self.trading_address_town
+        ))
+        if some_address_fields_existence and not all_required_fields_existence:
+            raise ValidationError('Trading address must have at least address_1, town and country.')
+        super(Company, self).clean()
 
 
 class CompaniesHouseCompany(CompanyAbstract):
@@ -187,7 +213,7 @@ class Contact(BaseModel):
     last_name = models.CharField(max_length=MAX_LENGTH)
     role = models.ForeignKey('Role')
     company = models.ForeignKey('Company', related_name='contacts')
-    teams = models.ManyToManyField('Team')
+    teams = models.ManyToManyField('Team', blank=True)
     telephone_countrycode = models.CharField(max_length=MAX_LENGTH)
     telephone_number = models.CharField(max_length=MAX_LENGTH)
     email = models.EmailField()
@@ -198,7 +224,7 @@ class Contact(BaseModel):
     address_4 = models.CharField(max_length=MAX_LENGTH, blank=True)
     address_town = models.CharField(max_length=MAX_LENGTH, blank=True)
     address_county = models.CharField(max_length=MAX_LENGTH, blank=True)
-    address_country = models.ForeignKey('Country', blank=True)
+    address_country = models.ForeignKey('Country', null=True)
     address_postcode = models.CharField(max_length=MAX_LENGTH, blank=True)
     uk_region = models.ForeignKey('UKRegion')
     telephone_alternative = models.CharField(max_length=MAX_LENGTH, null=True)
@@ -216,7 +242,7 @@ class Contact(BaseModel):
                 'address_3': self.company.trading_address_3 or self.company.registered_address_3,
                 'address_4': self.company.trading_address_4 or self.company.registered_address_4,
                 'address_town': self.company.trading_address_town or self.company.registered_address_town,
-                'address_country': self.company.trading_address_country.pk if self.company.trading_address else self.company.registered_address_country.name,
+                'address_country': self.company.trading_address_country.pk if self.company.trading_address_country else self.company.registered_address_country.name,
                 'address_county': self.company.trading_address_county or self.company.registered_address_county,
                 'address_postcode': self.company.trading_address_postcode or self.company.registered_address_postcode,
             }
@@ -233,4 +259,32 @@ class Contact(BaseModel):
             }
 
     def __str__(self):
-        return self.name
+        return '{first_name} {last_name}'.format(first_name=self.first_name, last_name=self.last_name)
+
+    def clean(self):
+        """Custom validation for address.
+
+        Either 'same_as_company' or address_1, address_town and address_country must be defined.
+        """
+        some_address_fields_existence = any((
+                self.address_1,
+                self.address_2,
+                self.address_3,
+                self.address_4,
+                self.address_town,
+                self.address_county,
+                self.address_postcode,
+                self.address_country
+            ))
+        all_required_fields_existence = all((
+                self.address_1,
+                self.address_country,
+                self.address_town
+            ))
+
+        if not self.address_same_as_company:
+            if some_address_fields_existence and not all_required_fields_existence:
+                raise ValidationError('address_1, town and country are required if an address is entered.')
+            elif not some_address_fields_existence:
+                raise ValidationError('Please select either address_as_company or enter an address manually.')
+        super(Contact, self).clean()
