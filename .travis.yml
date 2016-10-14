@@ -10,6 +10,9 @@ env:
 services:
   - docker
 
+install:
+  - apt-get docker-engine
+
 script:
   # - make leeloo-tests
   - make test-odata-psql
