@@ -12,18 +12,16 @@ services:
       ES_INDEX: test
     ports:
       - "8000:8000"
-    depends_on:
+    links:
       - postgres-django
       - es
-      - dummy-korben
-    networks:
-      - datahub
+      - korben
 
-  dummy-korben:
+  korben:
     build:
       context: korben/test/dummy-container
-    networks:
-      - datahub
+    links:
+      - postgres-django
     ports:
       - "8080:8080"
 
@@ -32,8 +30,6 @@ services:
     restart: always
     environment:
       - POSTGRES_DB=datahub
-    networks:
-      - datahub
     volumes:
       - ./docker-volumes/postgres-django:/var/lib/postgresql/data
 
@@ -42,11 +38,5 @@ services:
     restart: always
     ports:
       - "9200:9200"
-    networks:
-      - datahub
     volumes:
       - ./docker-volumes/es:/usr/share/elasticsearch/data
-
-networks:
-  datahub:
-    driver: bridge

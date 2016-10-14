@@ -1,7 +1,7 @@
 .PHONY: leeloo_tests leeloo_coverage leeloo_lint leeloo_migrate leeloo_makemigrations django_psql odata_psql
 
 leeloo-tests:
-	docker-compose -f test-leeloo.yml build && docker-compose -f test-leeloo.yml run leeloo pytest
+	docker-compose -f test-leeloo.yml down && docker-compose -f test-leeloo.yml build && docker-compose -f test-leeloo.yml run leeloo pytest -s
 
 leeloo-coverage:
 	docker-compose run leeloo pytest -s --cov=/app/leeloo --cov-report term-missing --cov-config .coveragerc
@@ -61,3 +61,6 @@ test-korben-tier2:
 
 test-korben-unit:
 	docker-compose -f test-korben-unit.yml down -v && docker-compose -f test-korben-unit.yml build && docker-compose -f test-korben-unit.yml run --service-ports test
+
+docker-cleanup:
+	docker rm -f `docker ps -qa`
