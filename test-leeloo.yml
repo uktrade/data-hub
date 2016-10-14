@@ -21,12 +21,9 @@ services:
 
   dummy-korben:
     build:
-      context: dummy-korben
-    depends_on:
-      - postgres-django
+      context: korben/test/dummy-container
     networks:
       - datahub
-    command: korben bau
     ports:
       - "8080:8080"
 
