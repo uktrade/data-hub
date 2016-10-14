@@ -10,8 +10,8 @@ env:
 services:
   - docker
 
-install:
-  - apt-get docker-engine
+before_install:
+  - apt-get install -y docker-engine
 
 script:
   # - make leeloo-tests
