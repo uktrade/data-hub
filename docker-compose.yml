@@ -9,6 +9,9 @@ services:
       SECRET_KEY: foobar
       UI_SECRET: foobar
       DATABASE_URL: ${DATABASE_URL}
+      ES_INDEX: ${ES_INDEX}
+      ES_HOST: ${ES_HOST}
+      ES_PORT: ${ES_PORT}
     ports:
       - "8000:8000"
     depends_on:

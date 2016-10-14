@@ -4,18 +4,22 @@ dist: trusty
 
 language: python
 
+env:
+  - ES_HOST=es
+  - ES_PORT=9200
+  - ES_INDEX=datahub
+  - KORBEN_HOST=korben
+  - KORBEN_PORT=8080
+  - DATABASE_URL=postgresql://postgres@postgres-django/datahub
+
 services:
   - docker
 
 script:
-  # - docker-compose build leeloo
   # - make leeloo-tests
   - make test-odata-psql
   - make test-korben-unit
   - make test-korben-tier0
-
-after_success:
-  - coveralls
 
 notifications:
   email: false
