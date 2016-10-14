@@ -11,7 +11,12 @@ services:
   - docker
 
 before_install:
-  - sudo apt-get install -y docker-engine
+  - sudo apt-get -qq update
+  - sudo apt-get install -y docker-engine  # need at least 1.10, travis has 1.8.2 installed by default
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/1.8.0/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
 
 script:
   # - make leeloo-tests
