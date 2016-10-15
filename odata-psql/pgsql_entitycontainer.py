@@ -23,6 +23,7 @@
 #
 
 import psycopg2
+import collections
 from pyslet.odata2 import sqlds
 import pyslet.odata2.csdl as edm
 
@@ -45,9 +46,10 @@ class PgSQLEntityContainer(sqlds.SQLEntityContainer):
     Python psycopg2 module."""
 
     def __init__(self, pgsql_options={}, **kwargs):
-        super(PgSQLEntityContainer, self).__init__(dbapi=psycopg2, **kwargs)
         self.pgsql_options = pgsql_options
         self.ParamsClass = PyFormatParams
+        self.table_column_count = collections.defaultdict(int)
+        super(PgSQLEntityContainer, self).__init__(dbapi=psycopg2, **kwargs)
 
     def get_collection_class(self):
         'Overridden to return :py:class:`PgSQLEntityCollection`'
@@ -65,11 +67,19 @@ class PgSQLEntityContainer(sqlds.SQLEntityContainer):
         'Overridden to return :py:class:`PgSQLReverseKeyCollection`'
         return PgSQLReverseKeyCollection
 
+    def mangle_name(self, source_path):
+        'Truncate names that are longer that 63 to 61 with a number'
+        mangled_name = super().mangle_name(source_path).strip('"')
+        if len(mangled_name) < 63:
+            return '"{0}"'.format(mangled_name)
+        n = self.table_column_count[(source_path[0], mangled_name[:61])]
+        name = mangled_name[:61] + ('00' + str(n))[-2:]
+        print('"{0}", "{1}", "{2}"'.format(source_path[0], mangled_name, name))
+        self.table_column_count[(source_path[0], mangled_name[:61])] += 1
+        return '"{0}"'.format(name)
+
     def open(self):
-        'Calls the underlying connect method.'
-        # we don't need to connect, this code is only used for dumping SQL
-        # dbc = self.dbapi.connect(**self.pgsql_options)
-        # return dbc
+        'Noop, no need to connect, this code is only used for dumping SQL'
 
     def break_connection(self, connection):
         'Calls the underlying interrupt method.'
