@@ -68,7 +68,7 @@ class PgSQLEntityContainer(sqlds.SQLEntityContainer):
         return PgSQLReverseKeyCollection
 
     def mangle_name(self, source_path):
-        'Just go for whatever, apart from less long. Seems to be OK'
+        'Truncate names that are longer that 64 to 62 with a number'
         mangled_name = super().mangle_name(source_path).strip('"')
         if len(mangled_name) < 64:
             return '"{0}"'.format(mangled_name)
@@ -79,10 +79,7 @@ class PgSQLEntityContainer(sqlds.SQLEntityContainer):
         return '"{0}"'.format(name)
 
     def open(self):
-        'Calls the underlying connect method.'
-        # we don't need to connect, this code is only used for dumping SQL
-        # dbc = self.dbapi.connect(**self.pgsql_options)
-        # return dbc
+        'Noop, no need to connect, this code is only used for dumping SQL'
 
     def break_connection(self, connection):
         'Calls the underlying interrupt method.'
