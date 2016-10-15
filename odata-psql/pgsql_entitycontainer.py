@@ -68,14 +68,14 @@ class PgSQLEntityContainer(sqlds.SQLEntityContainer):
         return PgSQLReverseKeyCollection
 
     def mangle_name(self, source_path):
-        'Truncate names that are longer that 64 to 62 with a number'
+        'Truncate names that are longer that 63 to 61 with a number'
         mangled_name = super().mangle_name(source_path).strip('"')
-        if len(mangled_name) < 64:
+        if len(mangled_name) < 63:
             return '"{0}"'.format(mangled_name)
-        n = self.table_column_count[(source_path[0], mangled_name[:62])]
-        name = mangled_name[:62] + ('00' + str(n))[-2:]
+        n = self.table_column_count[(source_path[0], mangled_name[:61])]
+        name = mangled_name[:61] + ('00' + str(n))[-2:]
         print('"{0}", "{1}", "{2}"'.format(source_path[0], mangled_name, name))
-        self.table_column_count[(source_path[0], mangled_name[:62])] += 1
+        self.table_column_count[(source_path[0], mangled_name[:61])] += 1
         return '"{0}"'.format(name)
 
     def open(self):
