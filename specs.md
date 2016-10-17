@@ -80,5 +80,5 @@ There is only one source for *trading address*, that is Data Hub.
 | `optevia_Contact_Id` | `← * →` | `contact_id` | Company contact | |
 | `optevia_Organisation_Id` | `← * →` | `company_id` | Automated in leeloo (from advisor data) | |
 | `optevia_Notes` | `* →` | `notes` | | |
-| `optevia_ServiceProvider_Id` | `← * →` | `service_provider_id` | Service provider | |
+| `optevia_ServiceProvider_Id` | `← *` | `service_provider_id` | Service provider | Defaults to advisor team in Leeloo |
 | `optevia_Service_Id` | `← * →` | `service_id` | Service | |
