@@ -8,6 +8,8 @@ services:
   - docker
 
 script:
+  # - docker-compose build leeloo
+  # - make leeloo-tests
   - docker-compose build leeloo
   - make leeloo-tests
   - make test-odata-psql
