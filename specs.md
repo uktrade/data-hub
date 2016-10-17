@@ -68,3 +68,17 @@ There is only one source for *trading address*, that is Data Hub.
 | `optevia_UKRegion_Id` | `← * →` | `uk_region_id` | UK region |
 | | | `telephone_alternative` | Alternative telephone | |
 | | | `email_alternative` | Alternative email address | |
+
+## Interaction
+
+| CDMS | Required | Leeloo | Display | Comments |
+|:---:|:---:|:---:|:---:|---|
+| `optevia_InteractionCommunicationChannel_Id` | `← * →` | `interaction_type_id` | Interaction type | Test values may appear on CDMS side |
+| `Subject` | `← * →` | `subject` | Subject | |
+| `ActualStart` | `← * →` | `date_of_interaction` | Date of interaction | Question if `ActualStart` populates CDMS front end properly |
+| `optevia_Advisor_Id` | `← * →` | `advisor_id` | DIT advisor | |
+| `optevia_Contact_Id` | `← * →` | `contact_id` | Company contact | |
+| `optevia_Organisation_Id` | `← * →` | `company_id` | Automated in leeloo (from advisor data) | |
+| `optevia_Notes` | `* →` | `notes` | | |
+| `optevia_ServiceProvider_Id` | `← * →` | `service_provider_id` | Service provider | |
+| `optevia_Service_Id` | `← * →` | `service_id` | Service | |
