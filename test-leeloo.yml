@@ -18,7 +18,5 @@ services:
   korben:
     build:
       context: korben/test/dummy-container
-    links:
-      - postgres-django
     ports:
       - "8080:8080"
