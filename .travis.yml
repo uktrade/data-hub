@@ -21,8 +21,8 @@ script:
   - make test-odata-psql
   - make docker-cleanup
   - make test-korben-unit
-#  - make docker-cleanup
-#  - make test-korben-tier0
+  - make docker-cleanup
+  - make test-korben-tier0
 
 notifications:
   email: false
