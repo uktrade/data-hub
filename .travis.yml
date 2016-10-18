@@ -19,9 +19,12 @@ before_install:
 - sudo mv docker-compose /usr/local/bin
 
 script:
-  - make test-leeloo
+  - make test-leelo
+  - make docker-cleanup
   - make test-odata-psql
+  - make docker-cleanup
   - make test-korben-unit
+  - make docker-cleanup
   - make test-korben-tier0
 
 notifications:
