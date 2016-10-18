@@ -1,22 +1,46 @@
-version: "2"
+version: '2'
 services:
+
   leeloo:
     build:
       context: leeloo
     volumes:
       - ./leeloo:/app/leeloo
+    entrypoint: dockerize -wait tcp://postgres:5432 -timeout 20s
+    ports:
+      - "8000:8000"
+    depends_on:
+      - korben
+      - postgres
+      - es
+    links:
+      - korben
+      - postgres
+      - es
     environment:
       SECRET_KEY: foobar
       UI_SECRET: foobar
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: postgresql://postgres@postgres-django/datahub
       ES_INDEX: test
-    ports:
-      - "8000:8000"
-    links:
-      - korben
+      ES_HOST: es
+      ES_PORT: 9200
+      KORBEN_HOST: korben
+      KORBEN_PORT: 8080
 
   korben:
     build:
       context: korben/test/dummy-container
     ports:
       - "8080:8080"
+
+  postgres:
+    image: postgres:9.5
+    restart: always
+    environment:
+      - POSTGRES_DB=datahub
+
+  es:
+    image: elasticsearch
+    restart: always
+    ports:
+      - "9200:9200"
