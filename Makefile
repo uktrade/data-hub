@@ -60,4 +60,4 @@ test-korben-unit:
 	docker-compose -f test-korben-unit.yml build && docker-compose -f test-korben-unit.yml run --service-ports test
 
 docker-cleanup:
-	docker rm -f `docker ps -qa`
+	docker rm -f `docker ps -qa` || echo

@@ -16,7 +16,7 @@ before_install:
 - sudo mv docker-compose /usr/local/bin
 
 script:
-  - make test-leelo
+  - make test-leeloo
   - make docker-cleanup
   - make test-odata-psql
   - make docker-cleanup
