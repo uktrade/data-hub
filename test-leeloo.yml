@@ -30,13 +30,9 @@ services:
     restart: always
     environment:
       - POSTGRES_DB=datahub
-    volumes:
-      - ./docker-volumes/postgres-django:/var/lib/postgresql/data
 
   es:
     image: elasticsearch
     restart: always
     ports:
       - "9200:9200"
-    volumes:
-      - ./docker-volumes/es:/usr/share/elasticsearch/data
