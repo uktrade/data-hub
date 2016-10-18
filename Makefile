@@ -1,7 +1,7 @@
 .PHONY: leeloo_tests leeloo_coverage leeloo_lint leeloo_migrate leeloo_makemigrations django_psql odata_psql
 
 leeloo-tests:
-	docker-compose -f test-leeloo.yml down && docker-compose -f test-leeloo.yml build && docker-compose -f test-leeloo.yml run --service-ports leeloo pytest -s
+	docker-compose -f test-leeloo.yml down && docker-compose -f test-leeloo.yml build && docker-compose -f test-leeloo.yml run leeloo pytest -s
 
 leeloo-coverage:
 	docker-compose run leeloo pytest -s --cov=/app/leeloo --cov-report term-missing --cov-config .coveragerc
