@@ -24,15 +24,3 @@ services:
       - postgres-django
     ports:
       - "8080:8080"
-
-  postgres-django:
-    image: postgres:9.5
-    restart: always
-    environment:
-      - POSTGRES_DB=datahub
-
-  es:
-    image: elasticsearch
-    restart: always
-    ports:
-      - "9200:9200"
