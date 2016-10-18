@@ -20,7 +20,7 @@ services:
     environment:
       SECRET_KEY: foobar
       UI_SECRET: foobar
-      DATABASE_URL: postgresql://postgres@postgres-django/datahub
+      DATABASE_URL: postgresql://postgres@postgres/datahub
       ES_INDEX: test
       ES_HOST: es
       ES_PORT: 9200
