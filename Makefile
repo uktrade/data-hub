@@ -1,13 +1,10 @@
 .PHONY: leeloo_tests leeloo_coverage leeloo_lint leeloo_migrate leeloo_makemigrations django_psql odata_psql
 
-leeloo-tests:
-	docker-compose -f test-leeloo.yml down && docker-compose -f test-leeloo.yml build && docker-compose -f test-leeloo.yml run --service-ports leeloo pytest -s
+test-leeloo:
+	docker-compose -f test-leeloo.yml run leeloo pytest -s
 
-leeloo-coverage:
+test-leeloo-coverage:
 	docker-compose run leeloo pytest -s --cov=/app/leeloo --cov-report term-missing --cov-config .coveragerc
-
-leeloo-lint:
-	docker-compose run leeloo flake8
 
 leeloo-migrate:
 	docker-compose run leeloo python manage.py migrate
@@ -54,13 +51,13 @@ test-odata-psql:
 	cd odata-psql && docker-compose up --build test
 
 test-korben-tier0:
-	docker-compose -f test-korben-tier0.yml down -v && docker-compose -f test-korben-tier0.yml build && docker-compose -f test-korben-tier0.yml run --service-ports test
+	docker-compose -f test-korben-tier0.yml build && docker-compose -f test-korben-tier0.yml run --service-ports test
 
 test-korben-tier2:
-	docker-compose -f test-korben-tier2.yml down -v && docker-compose -f test-korben-tier2.yml build && docker-compose -f test-korben-tier2.yml run --service-ports test
+	docker-compose -f test-korben-tier2.yml build && docker-compose -f test-korben-tier2.yml run --service-ports test
 
 test-korben-unit:
-	docker-compose -f test-korben-unit.yml down -v && docker-compose -f test-korben-unit.yml build && docker-compose -f test-korben-unit.yml run --service-ports test
+	docker-compose -f test-korben-unit.yml build && docker-compose -f test-korben-unit.yml run --service-ports test
 
 docker-cleanup:
-	docker rm -f `docker ps -qa`
+	docker rm -f `docker ps -qa` || echo
