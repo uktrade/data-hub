@@ -19,7 +19,7 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 script:
-  # - make leeloo-tests
+  - make test-leeloo
   - make test-odata-psql
   - make test-korben-unit
   - make test-korben-tier0
