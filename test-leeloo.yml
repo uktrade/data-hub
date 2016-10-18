@@ -13,8 +13,6 @@ services:
     ports:
       - "8000:8000"
     links:
-      - postgres-django
-      - es
       - korben
 
   korben:
