@@ -6,8 +6,11 @@ from .models import Advisor, Company, CompaniesHouseCompany, Contact, Country, I
 class AdvisorSerializer(serializers.ModelSerializer):
     """Advisor serializer."""
 
+    name = serializers.CharField()
+
     class Meta:
         model = Advisor
+        exclude = ('first_name', 'last_name')
 
 
 class NestedContactSerializer(serializers.ModelSerializer):
