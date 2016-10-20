@@ -22,7 +22,7 @@ services:
       - test-postgres
       - test-postgres-django
       - test-leeloo
-    command: py.test test/tier2
+    command: py.test test/tier2/bau
 
   test-postgres:
     image: postgres:9.5
@@ -42,7 +42,12 @@ services:
       SECRET_KEY: foobar
       UI_SECRET: foobar
       DATABASE_URL: postgres://postgres@test-postgres-django/test_django
+      ES_INDEX: ${ES_INDEX}
+      ES_HOST: ${ES_HOST}
+      ES_PORT: ${ES_PORT}
     links:
       - test-postgres-django
+    entrypoint: dockerize -wait tcp://test-postgres-django:5432 -timeout 20s
+    command: /app/leeloo/start.sh
     ports:
       - "8000:8000"
