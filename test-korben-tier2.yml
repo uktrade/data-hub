@@ -22,7 +22,7 @@ services:
       - test-postgres
       - test-postgres-django
       - test-leeloo
-    command: py.test test/tier2/bau
+    command: py.test test/tier2
 
   test-postgres:
     image: postgres:9.5
