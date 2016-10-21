@@ -6,7 +6,9 @@ services:
       context: leeloo
     volumes:
       - ./leeloo:/app/leeloo
-    entrypoint: dockerize -wait tcp://postgres:5432 -timeout 20s
+    entrypoint: |
+        dockerize -wait tcp://postgres:5432 -timeout 20s
+
     ports:
       - "8000:8000"
     depends_on:
@@ -30,6 +32,8 @@ services:
   korben:
     build:
       context: korben/test/dummy-container
+    environment:
+      DATABASE_URL: postgresql://postgres@postgres/test_datahub
     ports:
       - "8080:8080"
 
