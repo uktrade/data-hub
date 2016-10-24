@@ -1,0 +1,50 @@
+version: "2"
+services:
+  leeloo:
+    build:
+      context: leeloo
+    volumes:
+      - ./leeloo:/app/leeloo
+    environment:
+      SECRET_KEY: foobar
+      UI_SECRET: foobar
+      DATABASE_URL: ${DATABASE_URL}
+      ES_INDEX: ${ES_INDEX}
+      ES_HOST: ${ES_HOST}
+      ES_PORT: ${ES_PORT}
+    ports:
+      - "8000:8000"
+    entrypoint: dockerize -wait tcp://postgres-django:5432 -timeout 20s
+    links:
+      - postgres-django
+      - es
+      - korben
+    command: /app/leeloo/start.sh
+
+  korben:
+    build:
+      context: korben/test/dummy-container
+    environment:
+      DATABASE_URL: postgresql://postgres@postgres/test_datahub
+    ports:
+      - "8080:8080"
+
+  korben:
+    build:
+      context: korben/test/dummy-container
+    environment:
+      DATABASE_URL: postgresql://postgres@postgres/test_datahub
+    ports:
+      - "8080:8080"
+
+  postgres:
+    image: postgres:9.5
+    restart: always
+    environment:
+      - POSTGRES_DB=datahub
+
+  es:
+    image: elasticsearch
+    restart: always
+    ports:
+      - "9200:9200"
