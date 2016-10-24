@@ -3,6 +3,9 @@
 test-leeloo:
 	docker-compose -f test-leeloo.yml build && docker-compose -f test-leeloo.yml run leeloo pytest -s
 
+drop-es-test-index:
+	curl -XDELETE 'localhost:9200/test?pretty'
+
 test-leeloo-coverage:
 	docker-compose run leeloo pytest -s --cov=/app/leeloo --cov-report term-missing --cov-config .coveragerc
 
