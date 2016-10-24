@@ -16,7 +16,7 @@ services:
       - "8000:8000"
     entrypoint: dockerize -wait tcp://postgres-django:5432 -timeout 20s
     links:
-      - postgres-django
+      - postgres
       - es
       - korben
     command: /app/leeloo/start.sh
