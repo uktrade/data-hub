@@ -1,4 +1,4 @@
-.PHONY: leeloo_tests leeloo_coverage leeloo_lint leeloo_migrate leeloo_makemigrations django_psql odata_psql
+.PHONY: test-leeloo
 
 test-leeloo:
 	docker-compose -f test-leeloo.yml build && docker-compose -f test-leeloo.yml run leeloo pytest -s
