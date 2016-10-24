@@ -16,7 +16,7 @@ services:
       - "8000:8000"
     entrypoint: dockerize -wait tcp://postgres-django:5432 -timeout 20s
     links:
-      - postgres
+      - postgres-django
       - es
       - korben
     command: /app/leeloo/start.sh
@@ -29,15 +29,7 @@ services:
     ports:
       - "8080:8080"
 
-  korben:
-    build:
-      context: korben/test/dummy-container
-    environment:
-      DATABASE_URL: postgresql://postgres@postgres/test_datahub
-    ports:
-      - "8080:8080"
-
-  postgres:
+  postgres-django:
     image: postgres:9.5
     restart: always
     environment:
