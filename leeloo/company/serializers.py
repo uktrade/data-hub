@@ -143,11 +143,23 @@ class ContactSerializerRead(serializers.ModelSerializer):
     """Contact serializer."""
 
     teams = NestedTeamSerializer(many=True)
+    interactions = NestedInteractionSerializer(many=True)
     address = serializers.DictField()
 
     class Meta:
         model = Contact
         depth = 2
+        # we present the addresses as nested objects
+        exclude = (
+            'address_1',
+            'address_2',
+            'address_3',
+            'address_4',
+            'address_town',
+            'address_country',
+            'address_county',
+            'address_postcode',
+        )
 
 
 class InteractionSerializerRead(serializers.ModelSerializer):
