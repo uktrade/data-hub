@@ -28,11 +28,13 @@ services:
       ES_PORT: 9200
       KORBEN_HOST: korben
       KORBEN_PORT: 8080
+      DATAHUB_SECRET: secret
 
   korben:
     build:
       context: korben/test/dummy-container
     environment:
+      DATAHUB_SECRET: secret
       DATABASE_URL: postgresql://postgres@postgres/test_datahub
     ports:
       - "8080:8080"
