@@ -6,7 +6,7 @@ services:
       DATABASE_URL: postgres://postgres@test-postgres-django/test_django
       ES_HOST: es
       ES_PORT: 9200
-      DATAHUB_API_KEY: abc
+      DATAHUB_SECRET: abc
     build:
       context: korben
     links:
