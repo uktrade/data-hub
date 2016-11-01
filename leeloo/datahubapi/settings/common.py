@@ -6,17 +6,17 @@ https://docs.djangoproject.com/en/dev/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
-import socket
 
 import environ
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
 ROOT_DIR = environ.Path(__file__) - 2
 
 env = environ.Env()
 
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG')
@@ -63,7 +63,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'reversion.middleware.RevisionMiddleware'
+    'reversion.middleware.RevisionMiddleware',
 ]
 
 ROOT_URLCONF = 'datahubapi.urls'
@@ -128,8 +128,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
+
 PUBLIC_ROOT = str(ROOT_DIR('public'))
 STATIC_ROOT = str(ROOT_DIR('staticfiles'))
 STATIC_URL = '/static/'
@@ -139,8 +138,7 @@ STATICFILES_DIRS = (
     str(ROOT_DIR.path('static')),
 )
 
-# Application authorisation
-UI_SECRET = env('UI_SECRET')
+
 
 # DRF
 REST_FRAMEWORK = {
@@ -160,29 +158,12 @@ REST_FRAMEWORK = {
 
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
+
+# Leeloo stuff
 ES_HOST = env('ES_HOST')
 ES_PORT = env.int('ES_PORT')
 ES_INDEX = env('ES_INDEX')
 KORBEN_HOST = env('KORBEN_HOST')
 KORBEN_PORT = env('KORBEN_PORT')
 DATAHUB_SECRET = env('DATAHUB_SECRET')
-
 CHAR_FIELD_MAX_LENGTH = 255
-
-# we need a separate settings file for local!
-
-if DEBUG:
-    MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
-    INSTALLED_APPS += ('debug_toolbar',)
-
-    INTERNAL_IPS = ['127.0.0.1', '10.0.2.2', ]
-    # tricks to have debug toolbar with docker
-    ip = socket.gethostbyname(socket.gethostname())
-    INTERNAL_IPS += [ip[:-1] + "1"]
-
-    DEBUG_TOOLBAR_CONFIG = {
-        'DISABLE_PANELS': [
-            'debug_toolbar.panels.redirects.RedirectsPanel',
-        ],
-        'SHOW_TEMPLATE_CONTEXT': True,
-    }

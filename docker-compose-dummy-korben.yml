@@ -6,15 +6,20 @@ services:
     volumes:
       - ./leeloo:/app/leeloo
     environment:
-      SECRET_KEY: foobar
-      UI_SECRET: foobar
       DATABASE_URL: ${DATABASE_URL}
       ES_INDEX: ${ES_INDEX}
       ES_HOST: ${ES_HOST}
       ES_PORT: ${ES_PORT}
+      DJANGO_SECRET_KEY: foobar
+      DJANGO_SENTRY_DSN: ${DJANGO_SENTRY_DSN}
+      KORBEN_HOST: ${KORBEN_HOST}
+      KORBEN_PORT: ${KORBEN_PORT}
+      DATAHUB_SECRET: ${DATAHUB_SECRET}
+      DEBUG: ${DJANGO_DEBUG}
+      DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
     ports:
       - "8000:8000"
-    entrypoint: dockerize -wait tcp://postgres-django:5432 -timeout 20s
+    entrypoint: dockerize -wait http://es:9200 -wait tcp://postgres-django:5432 -timeout 20s
     links:
       - postgres-django
       - es

@@ -12,9 +12,6 @@ test-leeloo-coverage:
 leeloo-migrate:
 	docker-compose run leeloo python manage.py migrate
 
-leeloo-runserver:
-	docker-compose run leeloo python manage.py runserver 0.0.0.0:8000
-
 leeloo-makemigrations:
 	docker-compose run leeloo python manage.py makemigrations
 
