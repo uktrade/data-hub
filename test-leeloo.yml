@@ -21,7 +21,6 @@ services:
       - es
     environment:
       SECRET_KEY: foobar
-      UI_SECRET: foobar
       DATABASE_URL: postgresql://postgres@postgres/datahub
       ES_INDEX: test
       ES_HOST: es
@@ -29,6 +28,7 @@ services:
       KORBEN_HOST: korben
       KORBEN_PORT: 8080
       DATAHUB_SECRET: secret
+      DEBUG: True
 
   korben:
     build:
