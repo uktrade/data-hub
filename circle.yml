@@ -1,0 +1,19 @@
+machine:
+  pre:
+   - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
+  services:
+    - docker
+
+dependencies:
+  override:
+    - sudo pip install docker-compose==1.8.0
+
+test:
+  override:
+    - make test-leeloo
+    - make docker-cleanup
+    - make test-odata-psql
+    - make docker-cleanup
+    - make test-korben-unit
+    - make docker-cleanup
+    - make test-korben-tier0
