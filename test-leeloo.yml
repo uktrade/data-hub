@@ -28,7 +28,9 @@ services:
       KORBEN_HOST: korben
       KORBEN_PORT: 8080
       DATAHUB_SECRET: secret
-      DEBUG: True
+      DEBUG: 'True'
+      DJANGO_SECRET_KEY: changeme
+      DJANGO_SETTINGS_MODULE: datahubapi.settings.local
 
   korben:
     build:

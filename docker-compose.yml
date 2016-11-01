@@ -6,16 +6,17 @@ services:
     volumes:
       - ./leeloo:/app/leeloo
     environment:
-      SECRET_KEY: ${DJANGO_SECRET}
       DATABASE_URL: ${DATABASE_URL}
       ES_INDEX: ${ES_INDEX}
       ES_HOST: ${ES_HOST}
       ES_PORT: ${ES_PORT}
-      SENTRY_DSN: ${SENTRY_DSN}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+      DJANGO_SENTRY_DSN: ${DJANGO_SENTRY_DSN}
       KORBEN_HOST: ${KORBEN_HOST}
       KORBEN_PORT: ${KORBEN_PORT}
       DATAHUB_SECRET: ${DATAHUB_SECRET}
       DEBUG: ${DJANGO_DEBUG}
+      DJANGO_SETTINGS_MODULE: datahubapi.settings.production
     ports:
       - "8000:8000"
     entrypoint: dockerize -wait tcp://postgres-django:5432 -timeout 20s
@@ -43,6 +44,7 @@ services:
       CDMS_RSTS_URL: ${CDMS_RSTS_URL}
       CDMS_COOKIE_PATH: ${CDMS_COOKIE_PATH}
       ODATA_ENTITY_CONTAINER_KEY: ${ODATA_ENTITY_CONTAINER_KEY}
+      DATAHUB_SECRET: ${DATAHUB_SECRET}
     links:
       - postgres-django
       - postgres-odata
