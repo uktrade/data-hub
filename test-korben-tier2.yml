@@ -16,19 +16,21 @@ services:
       CDMS_RSTS_URL: ${CDMS_RSTS_URL}
       CDMS_COOKIE_PATH: ${CDMS_COOKIE_PATH}
       ODATA_ENTITY_CONTAINER_KEY: ${ODATA_ENTITY_CONTAINER_KEY}
+      KORBEN_SENTRY_DSN: http://abc:xyz@etc.com/etc/123
+      DATAHUB_SECRET: abc
     build:
       context: korben
     links:
       - test-postgres
       - test-postgres-django
       - test-leeloo
-    command: py.test test/tier2
+    command: py.test test/tier2/bau/test_interaction.py
 
   test-postgres:
     image: postgres:9.5
     restart: always
     environment:
-      - POSTGRES_DB=test
+        POSTGRES_DB: test
 
   test-postgres-django:
     image: postgres:9.5
@@ -39,15 +41,29 @@ services:
     build:
       context: leeloo
     environment:
-      SECRET_KEY: foobar
-      UI_SECRET: foobar
+      ES_INDEX: datahub
+      ES_HOST: test-es
+      ES_PORT: 9200
+      DJANGO_SECRET_KEY: foop
       DATABASE_URL: postgres://postgres@test-postgres-django/test_django
-      ES_INDEX: ${ES_INDEX}
-      ES_HOST: ${ES_HOST}
-      ES_PORT: ${ES_PORT}
-    links:
-      - test-postgres-django
-    entrypoint: dockerize -wait tcp://test-postgres-django:5432 -timeout 20s
-    command: /app/leeloo/start.sh
+      DJANGO_SENTRY_DSN: ${DJANGO_SENTRY_DSN}
+      KORBEN_HOST: ${KORBEN_HOST}
+      KORBEN_PORT: ${KORBEN_PORT}
+      DATAHUB_SECRET: abc
+      DEBUG: ${DJANGO_DEBUG}
+      DJANGO_SETTINGS_MODULE: datahubapi.settings.production
+      SECRET_KEY: foo
     ports:
       - "8000:8000"
+    entrypoint: dockerize -wait http://test-es:9200 -wait tcp://test-postgres-django:5432 -timeout 20s
+    links:
+      - test-postgres-django
+      - test-es
+    command: /app/leeloo/start.sh
+
+  test-es:
+    build:
+      context: elasticsearch
+    restart: always
+    ports:
+      - "9200:9200"
