@@ -45,7 +45,7 @@ services:
       CDMS_COOKIE_PATH: ${CDMS_COOKIE_PATH}
       ODATA_ENTITY_CONTAINER_KEY: ${ODATA_ENTITY_CONTAINER_KEY}
       DATAHUB_SECRET: ${DATAHUB_SECRET}
-      KORBEN_SENTRY_DSN: ${KORBEN_SENTRY_DSN
+      KORBEN_SENTRY_DSN: ${KORBEN_SENTRY_DSN}
     links:
       - postgres-django
       - postgres-odata
