@@ -7,6 +7,7 @@ services:
       ES_HOST: es
       ES_PORT: 9200
       DATAHUB_SECRET: abc
+      KORBEN_SENTRY_DSN: http://abc:xyz@etc.com/etc/123
     build:
       context: korben
     links:
