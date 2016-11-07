@@ -14,6 +14,7 @@ from ..cdms_api.rest.api import CDMSRestApi
 from .. import etl
 from korben import config, services, utils
 from korben.etl.spec import COLNAME_LONGSHORT, COLNAME_SHORTLONG
+from . import leeloo
 
 LOGGER = logging.getLogger('korben.sync.poll')
 
@@ -75,7 +76,9 @@ def reverse_scrape(client,
             LOGGER.debug('Row in %s doesn’t exist', table.name)
             result = connection.execute(table.insert().values(**row))
             assert result.rowcount == 1
-            etl.main.from_odata(table, [row[primary_key]])  # to django
+            leeloo.send(  # to django
+                *etl.main.from_odata(table, [row[primary_key]], dont_load=True)
+            )
             new_rows += 1
             continue
         LOGGER.debug('local_modified %s', local_against)
@@ -99,13 +102,15 @@ def reverse_scrape(client,
                      .values(**row)
             )
             result = connection.execute(update_statement)
-            etl.main.from_odata(table, [row[primary_key]])  # to django
+            leeloo.send(  # to django
+                *etl.main.from_odata(table, [row[primary_key]], dont_load=True)
+            )
             updated_rows += 1
     now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     LOGGER.info(
         '%s %s INSERT %s UPDATE %s', now, table.name, new_rows, updated_rows
     )
-    if new_rows + updated_rows < 50:
+    if (new_rows + updated_rows < 50) and offset > 100:
         return offset + new_rows + updated_rows
     LOGGER.info(
         'Continuing reverse scrape for %s (from offset %s)', table.name, offset
@@ -146,4 +151,10 @@ def poll(client=None,
 def main():
     'Poll forever'
     while True:
-        poll()
+        pollable_entities = (
+            'SystemUserSet',
+            'AccountSet',
+            'ContactSet',
+            'detica_interactionSet',
+        )
+        poll(entities=pollable_entities)

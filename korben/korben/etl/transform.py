@@ -4,6 +4,7 @@ according to spec.MAPPINGS
 '''
 import functools
 from . import spec
+from korben.services import db
 from korben.cdms_api.rest.utils import cdms_datetime_to_datetime
 from korben.cdms_api.rest.utils import datetime_to_cdms_datetime
 
@@ -17,18 +18,33 @@ def django_to_odata(django_tablename, django_dict):
     the OData entity has ETag requirements and the dict is the passed
     django_dict transformed according to the spec in etl.specs.MAPPINGS
     '''
+
     odata_dict = {}
-    mapping = spec.MAPPINGS[spec.DJANGO_LOOKUP[django_tablename]]
+    odata_tablename = spec.DJANGO_LOOKUP[django_tablename]
+    mapping = spec.MAPPINGS[odata_tablename]
+
+    # We don’t want to write "Undefined" back to Dynamics, so drop those keys
+    for django_col in mapping.get('use_undefined', ()):
+        if django_dict.get(django_col) == spec.ENUM_UNDEFINED_ID:
+            del django_dict[django_col]
+
+    # Simplest mapping from “local” dict key to renamed “local” key
     for odata_col, django_col in mapping.get('local', ()):
         value = django_dict.get(django_col)
         if odata_col and value:
             odata_dict[odata_col] = value
 
+    # Transform datetime strings to Dyanmics-style datetime strings
     for odata_col, django_col in mapping.get('datetime', ()):
         value = django_dict.get(django_col)
         if odata_col and value:
             odata_dict[odata_col] = datetime_to_cdms_datetime(value)
 
+    # Under the OData scheme, foreign keys are represented as dicts with some
+    # identifier key, a name key and a relation name key. We generally (see
+    # `nonflat_defaults`) only need to send the identifier key, this loop
+    # refers to the mapping and creates appropriate foreign key dicts that
+    # Dynamics will understand.
     for odata_prefix, field_map in mapping.get('nonflat', ()):
         unflattened = {}
         for odata_suffix, django_col in field_map:
@@ -39,13 +55,24 @@ def django_to_odata(django_tablename, django_dict):
         if not unflattened:
             continue
         odata_dict[odata_prefix] = unflattened
+
+    # In the cases where a foreign key is “generic” (ie. it could refer to one
+    # of a number of tables), we need to specify which entity type (or table)
+    # it refers to.
     for odata_prefix, defaults in mapping.get('nonflat_defaults', ()):
         if odata_prefix not in odata_dict:
             continue
         # TODO: Make this less poor; it’s called defaults, but it overwrites :/
         odata_dict[odata_prefix].update(defaults)
+
+    # We are concatenating some fields (eg. FirstName with MiddleName), make
+    # sure that these are properly populated when sending data back to
+    # Dyanmics.
     for _, django_col, odata_col in mapping.get('concat', ()):
-        odata_dict[odata_col] = django_dict[django_col]
+        value = django_dict.get(django_col)
+        if value:
+            odata_dict[odata_col] = value
+
     return mapping.get('etag', False), odata_dict
 
 
@@ -61,7 +88,7 @@ def odata_to_django(odata_tablename, odata_dict):
 
     for odata_col, django_col in mapping.get('datetime', ()):
         value = odata_dict.get(odata_col)
-        if odata_col:
+        if odata_col and value:
             django_dict[django_col] =\
                 cdms_datetime_to_datetime(value).isoformat()
 
