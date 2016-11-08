@@ -43,16 +43,17 @@ class DeferredSaveModelMixin:
         if korben_response.status_code == status.HTTP_200_OK:
             for key, value in korben_response.json().items():
                 setattr(self, key, value)
-            self.archived_on = parser.parse(self.archived_on) if self.archived_on else self.archived_on
-            self.modified_on = parser.parse(self.modified_on) if self.modified_on else self.modified_on
-            self.created_on = parser.parse(self.created_on) if self.created_on else self.created_on
         else:
             raise KorbenException(korben_response.json())
+
+    def get_excluded_fields(self):
+        """Override this method to define which fields should not be send to Korben."""
+        return []
 
     def _convert_model_to_korben_format(self):
         """Override this method to have more granular control of what gets sent to Korben."""
 
-        return model_to_dictionary(self, fk_ids=True)
+        return model_to_dictionary(self, excluded_fields=self.get_excluded_fields(), fk_ids=True)
 
     def update_from_korben(self):
         """Update the model fields from Korben.

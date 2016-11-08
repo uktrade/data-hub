@@ -3,7 +3,10 @@ import uuid
 
 from dateutil import parser
 from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from django.db import models
 from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
@@ -107,6 +110,9 @@ class Company(CompanyAbstract, BaseModel):
     trading_address_country = models.ForeignKey('Country', null=True, related_name='company_trading_address_country')
     trading_address_postcode = models.CharField(max_length=MAX_LENGTH, blank=True, null=True)
 
+    class Meta:
+        verbose_name_plural = 'companies'
+
     @cached_property
     def uk_based(self):
         """Whether a company is based in the UK or not."""
@@ -192,23 +198,6 @@ class InteractionType(BaseConstantModel):
     pass
 
 
-class Advisor(BaseModel):
-    """Advisor."""
-
-    id = models.UUIDField(primary_key=True, db_index=True, default=uuid.uuid4)
-    first_name = models.CharField(max_length=MAX_LENGTH)
-    last_name = models.CharField(max_length=MAX_LENGTH)
-    email = models.EmailField()
-    dit_team = models.ForeignKey('Team')
-
-    @cached_property
-    def name(self):
-        return '{first_name} {last_name}'.format(first_name=self.first_name, last_name=self.last_name)
-
-    def __str__(self):
-        return self.name
-
-
 class Interaction(BaseModel):
     """Interaction from CDMS."""
 
@@ -233,6 +222,10 @@ class Interaction(BaseModel):
         date_of_interaction_string = korben_response.json().get('date_of_interaction')
         if date_of_interaction_string:
             self.date_of_interaction = parser.parse(date_of_interaction_string)
+
+    def get_excluded_fields(self):
+        """Don't send user to Korben, it's a Django thing."""
+        return ['user']
 
 
 class Title(BaseConstantModel):
@@ -304,14 +297,14 @@ class Contact(BaseModel):
             }
         else:
             return {
-               'address_1': self.address_1,
-               'address_2': self.address_2,
-               'address_3': self.address_3,
-               'address_4': self.address_4,
-               'address_town': self.address_town,
-               'address_country': self.address_country.pk if self.address_country else None,
-               'address_county': self.address_county,
-               'address_postcode': self.address_postcode,
+                'address_1': self.address_1,
+                'address_2': self.address_2,
+                'address_3': self.address_3,
+                'address_4': self.address_4,
+                'address_town': self.address_town,
+                'address_country': self.address_country.pk if self.address_country else None,
+                'address_county': self.address_county,
+                'address_postcode': self.address_postcode,
             }
 
     def __str__(self):
@@ -346,16 +339,68 @@ class Contact(BaseModel):
         super(Contact, self).clean()
 
 
+class Advisor(DeferredSaveModelMixin, models.Model):
+    """Advisor."""
+
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
+    id = models.UUIDField(primary_key=True, db_index=True, default=uuid.uuid4)
+    first_name = models.CharField(max_length=MAX_LENGTH)
+    last_name = models.CharField(max_length=MAX_LENGTH)
+    dit_team = models.ForeignKey('Team')
+    email = models.EmailField()
+
+    @cached_property
+    def name(self):
+        return '{first_name} {last_name}'.format(first_name=self.first_name, last_name=self.last_name)
+
+    def __str__(self):
+        return self.name
+
+    def get_excluded_fields(self):
+        """Don't send user to Korben, it's a Django thing."""
+        return ['user']
+
+
+# Create a Django user when an advisor is created
+def create_user_for_advisor(instance, created, **kwargs):
+    if created and not instance.user:
+        user_model = get_user_model()
+        user, _ = user_model.objects.get_or_create(
+            username=instance.email.split('@')[0],
+            email=instance.email,
+            first_name=instance.first_name,
+            last_name=instance.last_name,
+        )
+        user.set_unusable_password()
+        instance.user = user
+        try:
+            instance.save()
+        except IntegrityError:  # somehow factories are saving it twice and it blows up, prevent it from happening
+            pass
+
+
+# Create an advisor when a user is created (ie using the shell)
+# Users should be created through advisors, this covers the case of automated tests and users created with
+# the management command
+@receiver(post_save, sender=User)  # cannot use get_user_model() because app registry is not initialised
+def create_advisor_for_user(instance, created, **kwargs):
+    if created:
+        advisor = Advisor(
+            user=instance,
+            first_name=instance.first_name if instance.first_name else instance.email,
+            last_name=instance.last_name,
+            dit_team=Team.objects.get(name='Undefined'),
+            email=instance.email
+        )
+        advisor.save(as_korben=True)  # don't talk to Korben, this is not an Advisor we want to save in CDMS!
+
+
 # Write to ES stuff
-
-MODEL_TO_WRITE_TO_ES = (Company, CompaniesHouseCompany, Contact, Interaction)
-
-
 @receiver((post_save, m2m_changed))
 def save_to_es(sender, instance, **kwargs):
     """Save to ES."""
 
-    if sender in MODEL_TO_WRITE_TO_ES:
+    if sender in (Company, CompaniesHouseCompany, Contact, Interaction):
         es_connector = ESConnector()
         doc_type = type(instance)._meta.db_table  # cannot access _meta from the instance
         data = model_to_dictionary(instance)

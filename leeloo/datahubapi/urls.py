@@ -5,7 +5,7 @@ from oauth2_provider.views import TokenView
 from rest_framework import routers
 
 from company import views
-from company.views import who_am_i
+from user.views import who_am_i
 from search.views import Search
 
 
@@ -22,9 +22,10 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^search$', Search.as_view(), name='search'),
     url(r'^metadata/', include('company.metadata_urls')),
-    url(r'^token/$', TokenView.as_view(), name="token"),
+    url(r'^token$', TokenView.as_view(), name="token"),
     url(r'^korben/', include('korben.urls', namespace='korben')),
-    url(r'^whoami$', who_am_i, name='who_am_i')
+    url(r'^whoami$', who_am_i, name='who_am_i'),
+    url(r'^dashboard/', include('dashboard.urls', namespace='dashboard'))
 ]
 
 if settings.DEBUG:
