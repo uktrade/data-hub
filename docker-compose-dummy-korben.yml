@@ -56,3 +56,8 @@ services:
       - "9200:9200"
     volumes:
       - ./docker-volumes/es:/usr/share/elasticsearch/data
+
+  redis:
+    image: redis:3.2.5
+    volumes:
+      - ./docker-volumes/dummy-redis:/data
