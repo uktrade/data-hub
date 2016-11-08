@@ -53,3 +53,8 @@ services:
     restart: always
     ports:
       - "9200:9200"
+
+  redis:
+    image: redis:3.2.5
+    volumes:
+      - ./docker-volumes/test-redis-leeloo:/data

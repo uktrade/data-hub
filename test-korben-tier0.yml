@@ -22,3 +22,8 @@ services:
     image: postgres:9.5
     environment:
       POSTGRES_DB: test_django
+
+  redis:
+    image: redis:3.2.5
+    volumes:
+      - ./docker-volumes/test-redis-tier0:/data
