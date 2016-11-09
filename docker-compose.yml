@@ -50,6 +50,7 @@ services:
       - postgres-django
       - postgres-odata
       - es
+      - redis
     volumes:
       - ./docker-volumes/korben/cache:/src/cache
       - ./docker-volumes/korben/cache:/cache
