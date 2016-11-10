@@ -20,9 +20,9 @@ There are six Docker Compose files: four used in testing, one for production and
 * `test-korben-tier1.yml`
 * `test-korben-tier2.yml`
 
-Build the necessary containers for the required environemt:
+Build and run the necessary containers for the required environment:
 
-    docker-compose -f {file.yml} build
+    docker-compose -f {file.yml} up --build
 
 ### Env file
 
