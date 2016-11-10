@@ -10,10 +10,5 @@ dependencies:
 
 test:
   override:
-    - make test-leeloo
-    - make docker-cleanup
-    - make test-odata-psql
-    - make docker-cleanup
-    - make test-korben-unit
-    - make docker-cleanup
-    - make test-korben-tier0
+    - case $CIRCLE_NODE_INDEX in 0) make test-leeloo ;; 1) make test-odata-psql ;; 2) make test-korben-unit ;; 3) make test-korben-tier0 ;; esac:
+        parallel: true
