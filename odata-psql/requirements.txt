@@ -1,6 +1,0 @@
-git+https://github.com/uktrade/pyslet.git@master#egg=pyslet
-lxml
-psycopg2
-pytest
-requests
-sqlparse
