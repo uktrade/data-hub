@@ -1,0 +1,12 @@
+[submodule "korben"]
+	path = korben
+	url = git@github.com:uktrade/data-hub-korben.git
+[submodule "leeloo"]
+	path = leeloo
+	url = git@github.com:uktrade/data-hub-leeloo.git
+[submodule "odata-psql"]
+	path = odata-psql
+	url = git@github.com:uktrade/data-hub-odata-psql.git
+[submodule "rhod"]
+	path = rhod
+	url = git@github.com:uktrade/data-hub-prototype.git
