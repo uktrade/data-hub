@@ -1,5 +1,14 @@
 version: "2"
 services:
+
+  rhod:
+    build:
+      context: rhod
+    links:
+      - redis-rhod
+      - leeloo
+    entrypoint: dockerize -wait http://leeloo:8000 -timeout 120s
+
   leeloo:
     build:
       context: leeloo
@@ -75,8 +84,7 @@ services:
       - ./docker-volumes/postgres-django:/var/lib/postgresql/data
 
   es:
-    build:
-      context: elasticsearch
+    image: elasticsearch:2.4.1
     restart: always
     ports:
       - "9200:9200"
@@ -87,3 +95,8 @@ services:
     image: redis:3.2.5
     volumes:
       - ./docker-volumes/redis:/data
+
+  redis-rhod:
+    image: redis:3.2.5
+    volumes:
+      - ./docker-volumes/redis-rhod:/data
