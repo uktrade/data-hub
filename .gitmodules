@@ -1,12 +1,19 @@
 [submodule "korben"]
 	path = korben
 	url = git@github.com:uktrade/data-hub-korben.git
+	branch = master
 [submodule "leeloo"]
 	path = leeloo
 	url = git@github.com:uktrade/data-hub-leeloo.git
+	branch = ben/repo-split
 [submodule "odata-psql"]
 	path = odata-psql
 	url = git@github.com:uktrade/data-hub-odata-psql.git
 [submodule "rhod"]
 	path = rhod
 	url = git@github.com:uktrade/data-hub-prototype.git
+	branch = ben/repo-split
+[submodule "test"]
+	path = test
+	url = git@github.com:bmcorser/data-hub-test-browser.git
+	branch = master
