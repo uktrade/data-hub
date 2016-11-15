@@ -1,11 +1,20 @@
-# Data Hub backend
+# Data Hub
 
-[![CircleCI](https://circleci.com/gh/uktrade/data-hub-backend/tree/master.svg?style=svg)](https://circleci.com/gh/uktrade/data-hub-backend/tree/master)
+![Leeloo and Korben](leeloo-korben.jpg)
 
-Repository for Data Hub backend. It contains due different components:
+This repo contains docker-compose files for development and testing. To start,
+do some submodules magic to pull in all the separate repos:
 
+```
+git submodule foreach -q --recursive 'branch="$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; git checkout $branch'
+```
+
+Repository for Data Hub backend. It contains the following components:
+
+* Rhod: Browser client for Django app
 * Leeloo: Django app providing API to the Frontend
-* Korben: Python app providing sync and ETL
+* Korben: Python app providing sync and ETL for custom BAE-hosted Dynamics
+  instance
 
 ## Installation
 
@@ -13,21 +22,18 @@ Datahub backend uses Docker compose to setup and run all the necessary component
 
 There are six Docker Compose files: four used in testing, one for production and one for local development.
 
-* `docker-compose.yml`: production file
+* `docker-compose.yml`: development file
 * `docker-compose-dummy-korben.yml`: local development file, it uses a dummy version of Korben
 * `test-leeloo.yml`
-* `test-korben-tier0.yml`
-* `test-korben-tier1.yml`
-* `test-korben-tier2.yml`
 
 Build and run the necessary containers for the required environment:
 
     docker-compose -f {file.yml} up --build
 
+
 ### Env file
 
-All the following environment variables must be set in a `.env` file, generate secrets using `$(openssl rand -base64 32)`
-
+All the following environment variables must be set in a `.env` file.
 ```
 CDMS_ADFS_URL=https://test.com
 CDMS_BASE_URL=https://test.com
@@ -35,7 +41,7 @@ CDMS_USERNAME=user
 CDMS_PASSWORD=password
 CDMS_COOKIE_KEY=secret
 CDMS_RSTS_URL=https://test.com
-CDMS_COOKIE_PATH=/path
+CDMS_COOKIE_PATH=/path/to/cookie
 ODATA_ENTITY_CONTAINER_KEY=secret
 DATAHUB_SECRET=secret
 
@@ -80,5 +86,3 @@ Tests run automatically on Circle CI. To run test on local machine use the provi
     - make test-korben-unit
     - make docker-cleanup
     - make test-korben-tier0
-
-![Leeloo and Korben](leeloo-korben.jpg)
