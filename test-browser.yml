@@ -1,0 +1,95 @@
+version: "2"
+services:
+
+  rhod:
+    build:
+      context: rhod
+    links:
+      - redis-rhod
+      - leeloo
+    entrypoint: dockerize -wait http://leeloo:8000/admin/login/ -timeout 120s
+    command: npm start
+    ports:
+      - 3000:3000
+
+  leeloo:
+    build:
+      context: leeloo
+    volumes:
+      - ./leeloo:/app/leeloo
+      - ./test:/test
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      ES_INDEX: ${ES_INDEX}
+      ES_HOST: ${ES_HOST}
+      ES_PORT: ${ES_PORT}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+      DJANGO_SENTRY_DSN: ${DJANGO_SENTRY_DSN}
+      KORBEN_HOST: ${KORBEN_HOST}
+      KORBEN_PORT: ${KORBEN_PORT}
+      DATAHUB_SECRET: ${DATAHUB_SECRET}
+      DEBUG: ${DJANGO_DEBUG}
+      DJANGO_SETTINGS_MODULE: config.settings.production
+      TEST_LEELOO_SUPERUSER_USERNAME: ${TEST_LEELOO_SUPERUSER_USERNAME}
+      TEST_LEELOO_SUPERUSER_PASSWORD: ${TEST_LEELOO_SUPERUSER_PASSWORD}
+    ports:
+      - "8000:8000"
+    entrypoint: dockerize -wait http://es:9200 -wait tcp://postgres-django:5432 -timeout 120s
+    links:
+      - postgres-django
+      - es
+      - korben
+    command: /test/leeloo-start.sh
+
+  korben:
+    build:
+      context: korben
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_ODATA_URL: ${DATABASE_ODATA_URL}
+      ES_HOST: ${ES_HOST}
+      ES_PORT: ${ES_PORT}
+
+      # magical secrets below
+      CDMS_ADFS_URL: ${CDMS_ADFS_URL}
+      CDMS_BASE_URL: ${CDMS_BASE_URL}
+      CDMS_USERNAME: ${CDMS_USERNAME}
+      CDMS_PASSWORD: ${CDMS_PASSWORD}
+      CDMS_COOKIE_KEY: ${CDMS_COOKIE_KEY}
+      CDMS_RSTS_URL: ${CDMS_RSTS_URL}
+      CDMS_COOKIE_PATH: ${CDMS_COOKIE_PATH}
+      ODATA_ENTITY_CONTAINER_KEY: ${ODATA_ENTITY_CONTAINER_KEY}
+      DATAHUB_SECRET: ${DATAHUB_SECRET}
+      KORBEN_SENTRY_DSN: ${KORBEN_SENTRY_DSN}
+    links:
+      - postgres-django
+      - postgres-odata
+      - es
+      - redis
+    command: korben bau
+    ports:
+      - "8080:8080"
+
+  postgres-odata:
+    image: postgres:9.5
+    restart: always
+    environment:
+      - POSTGRES_DB=datahub_odata
+
+  postgres-django:
+    image: postgres:9.5
+    restart: always
+    environment:
+      - POSTGRES_DB=datahub
+
+  es:
+    image: elasticsearch:2.4.1
+    restart: always
+    ports:
+      - "9200:9200"
+
+  redis:
+    image: redis:3.2.5
+
+  redis-rhod:
+    image: redis:3.2.5
