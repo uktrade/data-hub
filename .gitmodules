@@ -5,7 +5,7 @@
 [submodule "leeloo"]
 	path = leeloo
 	url = git@github.com:uktrade/data-hub-leeloo.git
-	branch = ben/repo-split
+	branch = master
 [submodule "odata-psql"]
 	path = odata-psql
 	url = git@github.com:uktrade/data-hub-odata-psql.git
