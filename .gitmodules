@@ -13,7 +13,3 @@
 	path = rhod
 	url = git@github.com:uktrade/data-hub-prototype.git
 	branch = ben/repo-split
-[submodule "test"]
-	path = test
-	url = git@github.com:bmcorser/data-hub-test-browser.git
-	branch = master
