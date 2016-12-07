@@ -81,4 +81,3 @@ Tests run automatically on Circle CI. To run test on
 local machine use the provided shell script:
 
     - `test/jenkins.sh`
-
