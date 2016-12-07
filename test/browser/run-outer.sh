@@ -1,13 +1,14 @@
 #!/bin/bash
 
-trap "make container-rm" EXIT
+source commands.sh # ☜  load all the functions
 
-make container-build
-make container-up
+trap "container-rm" EXIT
 
-make test-run
-make test-result
+container-up
+
+test-run
+test-result
 EXIT_CODE=$?
-make test-results
+test-results
 
 exit $EXIT_CODE
