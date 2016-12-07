@@ -14,10 +14,14 @@ password = os.environ['TEST_LEELOO_SUPERUSER_PASSWORD']
 try:
     test_user = Advisor.objects.get(email=username)
 except Advisor.DoesNotExist:
-    test_user = Advisor(email=username)
+    test_user = Advisor(
+        first_name='Test',
+        last_name='User',
+        email=username,
+    )
     test_user.set_password(password)
     test_user.is_superuser = True
     test_user.is_staff = True
     test_user.save()
-test_user.advisor.dit_team = Team.objects.get(name='London International Trade Team')
-test_user.advisor.save()
+test_user.dit_team = Team.objects.get(name='London International Trade Team')
+test_user.save(as_korben=True)
