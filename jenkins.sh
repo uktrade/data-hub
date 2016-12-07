@@ -1,2 +1,3 @@
+set -e
 cd $WORKSPACE/test/browser
-./run-outer.sh
+./run-outer.sh xvfb-run

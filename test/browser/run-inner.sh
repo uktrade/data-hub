@@ -1,5 +1,5 @@
 CONTAINER_HOST_IP=$(ip route|awk '/default/ { print $3 }')
-casperjs test \
+$1 casperjs test \
     --engine=slimerjs \
     --xunit=/results.xml \
     --includes=/src/config.js \

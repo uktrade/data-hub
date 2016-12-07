@@ -50,26 +50,12 @@ container-up () {
         -e DELETER_PORT=$DELETER_PORT \
         --name casperjs \
         casperjs \
-        tail -f /dev/null
-}
-
-container-up-jenkins () {
-    container-build # ☜  deps
-    colecho $CYAN "Bring casperjs container up"
-    docker run -d \
-        -e CDMS_ADFS_URL=$CDMS_ADFS_URL \
-        -e CDMS_BASE_URL=$CDMS_BASE_URL \
-        -e CDMS_USERNAME=$CDMS_USERNAME \
-        -e CDMS_PASSWORD=$CDMS_PASSWORD \
-        -e DELETER_PORT=$DELETER_PORT \
-        --name casperjs \
-        xvfb-run casperjs \
-        tail -f /dev/null
+        tail -f /dev/null > /dev/null 2>&1
 }
 
 test-run () {
     colecho $CYAN "Running test suite"
-    docker exec casperjs bash run-inner.sh
+    docker exec casperjs bash run-inner.sh $1
 }
 
 test-result () {
