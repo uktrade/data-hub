@@ -11,8 +11,10 @@ colecho () {
 }
 
 container-rm () {
-    colecho $CYAN 'Drop casperjs container'
-    docker ps --format '{{.Names}}' | grep casperjs && docker rm -f casperjs > /dev/null 2>&1 || colecho $YELLOW "Container not running"
+    colecho $CYAN "Drop casperjs container"
+    docker ps --format '{{.Names}}' | grep casperjs > /dev/null 2>&1 && \
+        docker rm -f casperjs > /dev/null 2>&1 || \
+        colecho $YELLOW "Container not running"
 }
 
 container-build () {
@@ -64,6 +66,6 @@ test-result () {
 }
 
 test-results () {
-    colecho $CYAN Copying results out
+    colecho $CYAN "Copying results out of container"
     docker cp casperjs:/results.xml results.xml
 }

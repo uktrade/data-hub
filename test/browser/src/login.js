@@ -1,6 +1,6 @@
 var env = require('system').env;
 
-var login = function (casper) {
+var cdms = function (casper) {
   casper.open(env.CDMS_BASE_URL).then(function () {
     this.waitForSelector(
       '#bcSignout',
@@ -37,8 +37,8 @@ var login = function (casper) {
             this.thenOpen(env.CDMS_BASE_URL + '/main.aspx')
           },
           function () {
-            this.echo('Login failed, trying again', 'ERROR');
-            login(this);
+            this.echo('CDMS login failed, trying again', 'ERROR');
+            cdms(this);
           },
           5000
         );
@@ -47,4 +47,29 @@ var login = function (casper) {
   return casper;
 };
 
-module.exports = {login: login};
+var datahub = function (casper) {
+  casper.open('http://10.1.66.99:3000/login').then(function () {
+    this.wait(500);
+    this.waitForSelector('button[type=submit]',
+      function () {
+        this.sendKeys('#username', env.CDMS_USERNAME);
+        this.sendKeys('#password', env.CDMS_PASSWORD);
+        this.click('button[type=submit]');
+      }
+    );
+    this.waitForSelector(
+      'div.login-bar',
+      function () {
+        this.echo('Logged in OK', 'TRACE');
+      },
+      function () {
+        this.echo('Datahub login failed, trying again', 'ERROR');
+        datahub(this);
+      },
+      5000
+    );
+  });
+  return casper;
+};
+
+module.exports = {cdms: cdms, datahub: datahub};
