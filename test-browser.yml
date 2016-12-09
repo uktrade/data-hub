@@ -13,12 +13,12 @@ services:
       - 3000:3000
     environment:
       API_ROOT: http://leeloo:8000
-      REDIS_HOST: redis-rhod
-      REDIS_PORT: 6379
-      REDIS_URL: redis://:@redis-rhod:6379
-      API_CLIENT_ID: D8vTSMdo1rlpKKUxEB6IAlEDWdnYlU4EU2PywUT5
-      API_CLIENT_SECRET: DpxR3iDPKjnVedFMpB0bv3tipNe41w99oChXyK6zTCj2aXFhtP058oLG5f79SATKoRqIxokJ6259p95uy7H4w7OclhivNFbrov71f132TAtfu09f91WNfK1x9VSyDZw6
-      SESSION_SECRET: abc123
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_URL: ${REDIS_URL}
+      API_CLIENT_ID: ${API_CLIENT_ID}
+      API_CLIENT_SECRET: ${API_CLIENT_SECRET}
+      SESSION_SECRET: ${SESSION_SECRET}
 
   leeloo:
     build:
