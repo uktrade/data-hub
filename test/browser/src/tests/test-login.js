@@ -17,8 +17,6 @@ casper.test.begin('Login to Datahub', 1, function suite(test) {
   });
 });
 
-/*
-*/
 casper.test.begin('Login to CDMS', 1, function suite(test) {
   casper.start();
   login.cdms(casper).then(function () {
