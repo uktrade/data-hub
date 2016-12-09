@@ -49,8 +49,8 @@ services:
       - postgres-django
       - es
       - korben
-    # command: /test/leeloo-start.sh
-    command: ls -la /test
+    command: /test/leeloo-start.sh
+    # command: ls -la /test
 
   korben:
     build:
