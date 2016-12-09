@@ -1,6 +1,7 @@
 set -e
 
 cp -r test leeloo
+ls -la leeloo
 echo "ADD ./test /test" >> leeloo/Dockerfile
 cat leeloo/Dockerfile
 
