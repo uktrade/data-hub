@@ -77,12 +77,8 @@ Apply migrations:
     
 ## Testings
 
-Tests run automatically on Circle CI. To run test on local machine use the provided make commands:
+Tests run automatically on Circle CI. To run test on
+local machine use the provided shell script:
 
-    - make test-leeloo
-    - make docker-cleanup
-    - make test-odata-psql
-    - make docker-cleanup
-    - make test-korben-unit
-    - make docker-cleanup
-    - make test-korben-tier0
+    - `test/jenkins.sh`
+
