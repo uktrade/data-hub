@@ -1,6 +1,7 @@
 set -e
 
-ls -la test
+cp -r test leeloo
+echo "ADD test /test" >> leeloo/Dockerfile
 
 trap 'docker-compose -f test-browser.yml down --remove-orphans --volumes' EXIT
 docker-compose -f test-browser.yml up --build
