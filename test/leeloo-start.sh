@@ -4,5 +4,5 @@ python /app/leeloo/manage.py loaddata /app/leeloo/fixtures/metadata.yaml
 python /app/leeloo/manage.py loaddata /app/leeloo/fixtures/undefined.yaml
 pushd /app/leeloo
 python /app/test/leeloo-setup.py
+./start.sh
 popd
-/app/leeloo/start.sh
