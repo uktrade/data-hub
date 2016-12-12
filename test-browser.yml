@@ -1,9 +1,16 @@
 version: "2"
 services:
 
+  datahub-src:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
   rhod:
     build:
       context: rhod
+    volumes_from:
+      - datahub-src
     links:
       - redis-rhod
       - leeloo
@@ -23,9 +30,8 @@ services:
   leeloo:
     build:
       context: leeloo
-    volumes:
-      - ./leeloo:/app/leeloo
-      - ./test:/foo
+    volumes_from:
+      - datahub-src
     environment:
       DATABASE_URL: ${DATABASE_URL}
       ES_INDEX: ${ES_INDEX}
@@ -49,11 +55,13 @@ services:
       - postgres-django
       - es
       - korben
-    command: /foo/leeloo-start.sh
+    command: /app/test/leeloo-start.sh
 
   korben:
     build:
       context: korben
+    volumes_from:
+      - datahub-src
     environment:
       DATABASE_URL: ${DATABASE_URL}
       DATABASE_ODATA_URL: ${DATABASE_ODATA_URL}
