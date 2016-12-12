@@ -25,7 +25,7 @@ services:
       context: leeloo
     volumes:
       - ./leeloo:/app/leeloo
-      - ./test:/test
+      - ./test:/foo
     environment:
       DATABASE_URL: ${DATABASE_URL}
       ES_INDEX: ${ES_INDEX}
@@ -49,8 +49,7 @@ services:
       - postgres-django
       - es
       - korben
-    command: /test/leeloo-start.sh
-    # command: ls -la /test
+    command: /foo/leeloo-start.sh
 
   korben:
     build:
