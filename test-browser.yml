@@ -3,6 +3,7 @@ services:
 
   datahub-src:
     build:
+      context: .
       dockerfile: Dockerfile
 
   rhod:
