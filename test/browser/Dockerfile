@@ -16,8 +16,12 @@ RUN curl -Lfs http://download.slimerjs.org/releases/$SLIMERJS_VERSION/slimerjs-$
 
 RUN git clone https://github.com/casperjs/casperjs.git /usr/local/casperjs
 
-RUN ln -snf /usr/local/slimerjs/slimerjs /usr/local/bin/slimerjs && \
-    ln -snf /usr/local/casperjs/bin/casperjs /usr/local/bin/casperjs
+RUN curl -Lfs https://ftp.mozilla.org/pub/firefox/releases/$FIREFOX_VERSION/linux-x86_64/en-US/firefox-$FIREFOX_VERSION.tar.bz2 | tar -xjv -C /usr/local/
+
+RUN ln -sf /usr/local/slimerjs/slimerjs /usr/bin/slimerjs
+RUN ln -sf /usr/local/casperjs/bin/casperjs /usr/bin/casperjs
+RUN ln -snf /usr/local/firefox/firefox /usr/bin/firefox
+RUN ln -snf /usr/local/firefox/firefox-bin /usr/bin/firefox-bin
 
 COPY src /src
 COPY run-inner.sh /src/run-inner.sh
