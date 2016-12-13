@@ -3,7 +3,6 @@ FROM docker:1.12
 ENV DOCKER_BASE_VERSION=0.0.4
 ENV DOCKER_ARCH=x86_64
 ENV DOCKER_VERSION=latest
-ENV DOCKER_COMPOSE_VERSION=1.8.1
 
 RUN apk add --no-cache ca-certificates gnupg openssl && \
     gpg --recv-keys 91A6E7F85D05C65630BEF18951852D87348FFC4C && \
@@ -24,4 +23,4 @@ RUN apk add --no-cache ca-certificates gnupg openssl && \
 VOLUME /app
 COPY . /app/
 
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["/app/docker-entrypoint.sh"]

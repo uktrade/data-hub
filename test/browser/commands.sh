@@ -39,7 +39,7 @@ container-up () {
     colecho $CYAN "Bring casperjs container up (with proper environment, DISPLAY hooked up, etc)"
 
     colecho $CYAN "Grab local IP to connect X server"
-    LOCAL_IP=$(ifconfig en0 | grep inet | awk '$1=="inet" {print $2}')
+    LOCAL_IP=$(awk 'BEGIN{split(ENVIRON["DOCKER_HOST"],X,"//"); split(X[2],Y,":"); print Y[1]}')
     colecho $YELLOW "Expecting an X server running at $LOCAL_IP"
 
     colecho $CYAN "Bring container up (with no command)"
