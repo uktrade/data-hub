@@ -1,44 +1,30 @@
-FROM ubuntu:14.04
+FROM ubuntu:16.04
 
-# Env
-ENV SLIMERJS_VERSION_F 0.10.1
+ENV SLIMERJS_VERSION 0.10.2
+ENV FIREFOX_VERSION 50.0
 
-# Commands
-RUN \
-  apt-get update && \
-  apt-get upgrade -y && \
-  apt-get install -y vim git wget xvfb libxrender-dev libasound2 libdbus-glib-1-2 libgtk2.0-0 unzip python && \
-  mkdir -p /srv/var
-RUN wget -O /tmp/slimerjs-$SLIMERJS_VERSION_F.zip \
-    http://download.slimerjs.org/releases/$SLIMERJS_VERSION_F/slimerjs-$SLIMERJS_VERSION_F.zip
-WORKDIR /tmp
-RUN unzip /tmp/slimerjs-$SLIMERJS_VERSION_F.zip
-RUN rm -f /tmp/slimerjs-$SLIMERJS_VERSION_F.zip
-RUN mv /tmp/slimerjs-$SLIMERJS_VERSION_F/ /srv/var/slimerjs
-RUN git clone https://github.com/casperjs/casperjs.git /srv/var/casperjs
+RUN apt-get update && \
+    apt-get install -y bash vim git wget xvfb unzip python curl httpie tree bzip2 lsb-release libasound2 libatk1.0-0 libc6 libcairo-gobject2 libcairo2 libdbus-1-3 libdbus-glib-1-2 libfontconfig1 libfreetype6 libgcc1 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libgtk2.0-0 libpango-1.0-0 libpangocairo-1.0-0 libstartup-notification0 libstdc++6 libx11-6 libx11-xcb1 libxcb-shm0 libxcb1 libxcomposite1 libxdamage1 libxext6 libxfixes3 libxrender1 libxt6 && \
+    apt-get autoremove -y && \
+    apt-get clean all && \
+    rm -rf /var/lib/apt/lists/*
 
-ENV FIREFOXVERSION 49.0.2+build2-0ubuntu0.14.04.1
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends  firefox=$FIREFOXVERSION \
-                                                dbus-x11 \
-                                                libxext-dev \
-                                                libxrender-dev \
-                                                libxtst-dev;
-RUN apt-get autoremove -y && apt-get clean all
-RUN rm -rf /var/lib/apt/lists/*
+RUN curl -Lfs http://download.slimerjs.org/releases/$SLIMERJS_VERSION/slimerjs-$SLIMERJS_VERSION.zip -o /tmp/slimerjs-$SLIMERJS_VERSION.zip && \
+    unzip -o /tmp/slimerjs-$SLIMERJS_VERSION.zip -d /usr/local && \
+    rm -f /tmp/slimerjs-$SLIMERJS_VERSION.zip && \
+    mv /usr/local/slimerjs-$SLIMERJS_VERSION /usr/local/slimerjs
 
+RUN git clone https://github.com/casperjs/casperjs.git /usr/local/casperjs
 
-# Undo xvfb-run from base container (want to see)
-RUN ln -sf /srv/var/slimerjs/slimerjs /usr/bin/slimerjs
-RUN ln -sf /srv/var/casperjs/bin/casperjs /usr/bin/casperjs
+RUN curl -Lfs https://ftp.mozilla.org/pub/firefox/releases/$FIREFOX_VERSION/linux-x86_64/en-US/firefox-$FIREFOX_VERSION.tar.bz2 | tar -xjv -C /usr/local/
 
-RUN apt-get update
-RUN apt-get install -y httpie tree
-
-CMD ["/usr/bin/slimerjs"]
-
-ADD src /src
-ADD run-inner.sh /src/run-inner.sh
+RUN ln -sf /usr/local/slimerjs/slimerjs /usr/bin/slimerjs
+RUN ln -sf /usr/local/casperjs/bin/casperjs /usr/bin/casperjs
+RUN ln -snf /usr/local/firefox/firefox /usr/bin/firefox
+RUN ln -snf /usr/local/firefox/firefox-bin /usr/bin/firefox-bin
 
 WORKDIR /src
+COPY run-inner.sh /src/run-inner.sh
+COPY src /src
+
+CMD ["/usr/bin/slimerjs"]
