@@ -4,7 +4,7 @@ ENV SLIMERJS_VERSION 0.10.2
 ENV FIREFOX_VERSION 50.0
 
 RUN apt-get update && \
-    apt-get install -y vim git wget xvfb libxrender-dev libasound2 libdbus-glib-1-2 libgtk-3-0 unzip python curl httpie tree && \
+    apt-get install -y bash vim git wget xvfb libgtk-3-0 unzip python curl httpie tree bzip2 && \
     apt-get autoremove -y && \
     apt-get clean all && \
     rm -rf /var/lib/apt/lists/*
@@ -27,4 +27,4 @@ COPY src /src
 COPY run-inner.sh /src/run-inner.sh
 WORKDIR /src
 
-ENTRYPOINT ["/usr/bin/slimerjs"]
+CMD ["/usr/bin/slimerjs"]
