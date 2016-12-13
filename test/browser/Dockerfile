@@ -17,10 +17,10 @@ RUN rm -f /tmp/slimerjs-$SLIMERJS_VERSION_F.zip
 RUN mv /tmp/slimerjs-$SLIMERJS_VERSION_F/ /srv/var/slimerjs
 RUN git clone https://github.com/casperjs/casperjs.git /srv/var/casperjs
 
-ENV FIREFOXVERSION 46.0+build5-0ubuntu0.14.04.2
+ENV FIREFOXVERSION 49.0.2+build2-0ubuntu0.14.04.1
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886; \
     apt-get update; \
-    apt-get install -y --no-install-recommends  firefox \
+    apt-get install -y --no-install-recommends  firefox=$FIREFOXVERSION \
                                                 dbus-x11 \
                                                 libxext-dev \
                                                 libxrender-dev \
