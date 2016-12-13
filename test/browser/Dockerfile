@@ -23,8 +23,8 @@ RUN ln -sf /usr/local/casperjs/bin/casperjs /usr/bin/casperjs
 RUN ln -snf /usr/local/firefox/firefox /usr/bin/firefox
 RUN ln -snf /usr/local/firefox/firefox-bin /usr/bin/firefox-bin
 
-COPY src /src
-COPY run-inner.sh /src/run-inner.sh
 WORKDIR /src
+COPY run-inner.sh /src/run-inner.sh
+COPY src /src
 
 CMD ["/usr/bin/slimerjs"]
