@@ -40,6 +40,10 @@ container-up () {
 
     colecho $CYAN "Grab local IP to connect X server"
     LOCAL_IP=$(awk 'BEGIN{split(ENVIRON["DOCKER_HOST"],X,"//"); split(X[2],Y,":"); print Y[1]}')
+    if [ -z "$LOCAL_IP" ];
+    then
+        LOCAL_IP=$(ipconfig getifaddr en0)
+    fi
     colecho $YELLOW "Expecting an X server running at $LOCAL_IP"
 
     colecho $CYAN "Bring container up (with no command)"
