@@ -1,6 +1,6 @@
 set -e
 
-trap 'docker-compose -f test-browser.yml down --remove-orphans --volumes' EXIT
+trap 'cd $WORKSPACE && docker-compose -f test-browser.yml down --remove-orphans --volumes' EXIT
 echo "Bringing outer containers up ..."
 docker-compose -f test-browser.yml down --remove-orphans --volumes > /dev/null 2>&1
 docker-compose -f test-browser.yml up -d --build > /dev/null 2>&1
