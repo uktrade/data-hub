@@ -42,15 +42,17 @@ var cdms = function (casper) {
           },
           5000
         );
-      });
-    });
+      },
+      700
+    );
+  });
   return casper;
 };
 
 var datahub = function (casper) {
   casper.open('http://10.1.66.99:3000/login').then(function () {
     this.waitForSelector(
-      'div.login-bar',
+      'span.user-name',
       function noop () {
         this.echo('Already logged in', 'TRACE');
       },
@@ -73,7 +75,8 @@ var datahub = function (casper) {
           },
           5000
         );
-      }
+      },
+      700
     );
   });
   return casper;
