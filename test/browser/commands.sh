@@ -20,7 +20,7 @@ container-rm () {
 container-build () {
     container-rm # ☜  deps
     colecho $CYAN "Building casperjs container"
-    docker build . -t casperjs  # > /dev/null 2>&1
+    docker build . -t casperjs > /dev/null 2>&1
 }
 
 steal-docker-compose-env () {
@@ -56,7 +56,7 @@ container-up () {
         -e DELETER_PORT=$DELETER_PORT \
         --name casperjs \
         casperjs \
-        tail -f /dev/null  # > /dev/null 2>&1
+        tail -f /dev/null > /dev/null 2>&1
 }
 
 test-run () {
