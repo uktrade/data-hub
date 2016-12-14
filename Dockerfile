@@ -20,7 +20,7 @@ RUN apk add --no-cache ca-certificates gnupg openssl && \
     apk del gnupg openssl && \
     rm -rf /root/.gnupg
 
-ENV GIT_COMMIT master
+ARG GIT_COMMIT
 VOLUME /app
 RUN echo $GIT_COMMIT > /app/GIT_COMMIT
 COPY . /app/
