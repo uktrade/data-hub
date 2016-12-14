@@ -49,24 +49,31 @@ var cdms = function (casper) {
 
 var datahub = function (casper) {
   casper.open('http://10.1.66.99:3000/login').then(function () {
-    this.wait(500);
-    this.waitForSelector('button[type=submit]',
-      function () {
-        this.sendKeys('#username', env.CDMS_USERNAME);
-        this.sendKeys('#password', env.CDMS_PASSWORD);
-        this.click('button[type=submit]');
-      }
-    );
     this.waitForSelector(
       'div.login-bar',
-      function () {
-        this.echo('Logged in OK', 'TRACE');
+      function noop () {
+        this.echo('Already logged in', 'TRACE');
       },
-      function () {
-        this.echo('Datahub login failed, trying again', 'ERROR');
-        datahub(this);
-      },
-      5000
+      function submitCredentials () {
+        this.waitForSelector('button[type=submit]',
+          function () {
+            this.sendKeys('#username', env.CDMS_USERNAME);
+            this.sendKeys('#password', env.CDMS_PASSWORD);
+            this.click('button[type=submit]');
+          }
+        );
+        this.waitForSelector(
+          'div.login-bar',
+          function () {
+            this.echo('Logged in OK', 'TRACE');
+          },
+          function () {
+            this.echo('Datahub login failed, trying again', 'ERROR');
+            datahub(this);
+          },
+          5000
+        );
+      }
     );
   });
   return casper;
