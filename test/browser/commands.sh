@@ -49,6 +49,7 @@ container-up () {
     colecho $CYAN "Bring container up (with no command)"
     docker run -d \
         -e DISPLAY=$LOCAL_IP:0 \
+        -e HOST_IP=$LOCAL_IP \
         -e CDMS_ADFS_URL=$CDMS_ADFS_URL \
         -e CDMS_BASE_URL=$CDMS_BASE_URL \
         -e CDMS_USERNAME=$CDMS_USERNAME \

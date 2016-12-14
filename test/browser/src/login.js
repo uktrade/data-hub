@@ -50,7 +50,7 @@ var cdms = function (casper) {
 };
 
 var datahub = function (casper) {
-  casper.open('http://' + env.LOCAL_IP + ':3000/login').then(function () {
+  casper.open('http://' + env.HOST_IP + ':3000/login').then(function () {
     this.waitForSelector(
       'span.user-name',
       function noop () {
