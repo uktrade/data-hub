@@ -13,3 +13,7 @@ echo !
 cd $WORKSPACE/test/browser
 ./run-outer.sh xvfb-run
 cd $WORKSPACE
+
+docker-compose -f test-korben-tier2.yml down --remove-orphans --volumes
+docker-compose -f test-korben-tier2.yml build
+docker-compose -f test-korben-tier2.yml run --service-ports test
