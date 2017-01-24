@@ -1,39 +1,47 @@
 version: "2"
 services:
 
-  datahub-src:
+  behave:
     build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        GIT_COMMIT: ${GIT_COMMIT}
+      context: behave
+    links:
+      - rhod
+      - leeloo
+      - korben
+      - selenium
+    entrypoint: dockerize -wait http://rhod:3000/login -timeout 120s
+    environment:
+      RHOD_PORT: 3000
+      SELENIUM_PORT: 4444
+
+  selenium:
+    image: selenium/standalone-chrome-debug:3.0.1
+    restart: always
+    ports:
+      - "4444:4444"
+      - "5900:5900" # VNC port
+    volumes:
+      - /dev/shm:/dev/shm
 
   rhod:
     build:
       context: rhod
-    volumes_from:
-      - datahub-src
     links:
-      - redis-rhod
+      - redis
       - leeloo
     entrypoint: dockerize -wait http://leeloo:8000/admin/login/ -timeout 120s
     command: npm start
     ports:
-      - 3000:3000
+      - "3000:3000"
     environment:
       API_ROOT: http://leeloo:8000
-      REDIS_HOST: ${REDIS_HOST}
-      REDIS_PORT: ${REDIS_PORT}
-      REDIS_URL: ${REDIS_URL}
-      API_CLIENT_ID: ${API_CLIENT_ID}
-      API_CLIENT_SECRET: ${API_CLIENT_SECRET}
-      SESSION_SECRET: ${SESSION_SECRET}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_URL: redis://:@redis:6379
 
   leeloo:
     build:
       context: leeloo
-    volumes_from:
-      - datahub-src
     environment:
       DATABASE_URL: ${DATABASE_URL}
       ES_INDEX: ${ES_INDEX}
@@ -46,12 +54,8 @@ services:
       DATAHUB_SECRET: ${DATAHUB_SECRET}
       DEBUG: ${DJANGO_DEBUG}
       DJANGO_SETTINGS_MODULE: config.settings.production
-
-      # Required for automated setup
-      CDMS_USERNAME: ${CDMS_USERNAME}
-      CDMS_PASSWORD: ${CDMS_PASSWORD}
-      API_CLIENT_ID: ${API_CLIENT_ID}
-      API_CLIENT_SECRET: ${API_CLIENT_SECRET}
+      BROKER_URL: redis://redis
+      RESULT_BACKEND: redis://redis
     ports:
       - "8000:8000"
     entrypoint: dockerize -wait http://es:9200 -wait tcp://postgres-django:5432 -timeout 120s
@@ -59,13 +63,12 @@ services:
       - postgres-django
       - es
       - korben
-    command: /app/test/leeloo-start.sh
+      - redis
+    command: /app/start.sh
 
   korben:
     build:
       context: korben
-    volumes_from:
-      - datahub-src
     environment:
       DATABASE_URL: ${DATABASE_URL}
       DATABASE_ODATA_URL: ${DATABASE_ODATA_URL}
@@ -112,6 +115,6 @@ services:
 
   redis:
     image: redis:3.2.5
-
-  redis-rhod:
-    image: redis:3.2.5
+    restart: always
+    ports:
+      - "6379:6379"
