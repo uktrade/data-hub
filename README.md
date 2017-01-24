@@ -6,8 +6,9 @@ This repo contains docker-compose files for development and testing. To start,
 do some submodules magic to pull in all the separate repos:
 
 ```
-git submodule foreach -q --recursive 'branch="$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; git checkout $branch'
+git submodule update --init
 ```
+
 
 Repository for Data Hub backend. It contains the following components:
 
