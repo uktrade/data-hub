@@ -29,6 +29,8 @@ services:
       DATAHUB_SECRET: ${DATAHUB_SECRET}
       DEBUG: ${DJANGO_DEBUG}
       DJANGO_SETTINGS_MODULE: config.settings.production
+      BROKER_URL: ${BROKER_URL}
+      RESULT_BACKEND: ${RESULT_BACKEND}
     ports:
       - "8000:8000"
     entrypoint: dockerize -wait http://es:9200 -wait tcp://postgres-django:5432 -timeout 120s
