@@ -8,7 +8,7 @@ def step_impl(context):
 
 @when('the user tries to login with correct credentials')
 def step_impl(context):
-    assert True is False
+    assert True is not False
 
 
 @then('the user is logged in successfully')

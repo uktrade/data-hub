@@ -8,3 +8,4 @@ def get_chrome_webdriver():
         command_executor='http://selenium:4444/wd/hub',
         desired_capabilities=DesiredCapabilities.CHROME
     )
+

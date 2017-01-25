@@ -1,9 +1,18 @@
 version: "2"
 services:
 
+  datahub-src:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        GIT_COMMIT: ${GIT_COMMIT}
+
   behave:
     build:
       context: behave
+    volumes_from:
+      - datahub-src
     links:
       - rhod
       - leeloo
@@ -26,6 +35,8 @@ services:
   rhod:
     build:
       context: rhod
+    volumes_from:
+      - datahub-src
     links:
       - redis
       - leeloo
@@ -42,20 +53,24 @@ services:
   leeloo:
     build:
       context: leeloo
+    volumes_from:
+      - datahub-src
     environment:
       DATABASE_URL: ${DATABASE_URL}
       ES_INDEX: ${ES_INDEX}
       ES_HOST: ${ES_HOST}
       ES_PORT: ${ES_PORT}
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
-      DJANGO_SENTRY_DSN: ${DJANGO_SENTRY_DSN}
       KORBEN_HOST: ${KORBEN_HOST}
       KORBEN_PORT: ${KORBEN_PORT}
       DATAHUB_SECRET: ${DATAHUB_SECRET}
       DEBUG: ${DJANGO_DEBUG}
-      DJANGO_SETTINGS_MODULE: config.settings.production
+      DJANGO_SETTINGS_MODULE: config.settings.behave
       BROKER_URL: redis://redis
       RESULT_BACKEND: redis://redis
+
+      CDMS_USERNAME: ${CDMS_USERNAME}
+      CDMS_PASSWORD: ${CDMS_PASSWORD}
     ports:
       - "8000:8000"
     entrypoint: dockerize -wait http://es:9200 -wait tcp://postgres-django:5432 -timeout 120s
@@ -69,6 +84,8 @@ services:
   korben:
     build:
       context: korben
+    volumes_from:
+      - datahub-src
     environment:
       DATABASE_URL: ${DATABASE_URL}
       DATABASE_ODATA_URL: ${DATABASE_ODATA_URL}
