@@ -11,8 +11,6 @@ services:
   behave:
     build:
       context: behave
-    volumes_from:
-      - datahub-src
     links:
       - rhod
       - leeloo
@@ -22,6 +20,10 @@ services:
     environment:
       RHOD_PORT: 3000
       SELENIUM_PORT: 4444
+      CDMS_USERNAME: ${CDMS_USERNAME}
+      CDMS_PASSWORD: ${CDMS_PASSWORD}
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_USER_PASSWORD: ${TEST_USER_PASSWORD}
 
   selenium:
     image: selenium/standalone-chrome-debug:3.0.1
@@ -49,6 +51,8 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_URL: redis://:@redis:6379
+      API_CLIENT_ID: ${API_CLIENT_ID}
+      API_CLIENT_SECRET: ${API_CLIENT_SECRET}
 
   leeloo:
     build:
@@ -69,8 +73,12 @@ services:
       BROKER_URL: redis://redis
       RESULT_BACKEND: redis://redis
 
+      API_CLIENT_ID: ${API_CLIENT_ID}
+      API_CLIENT_SECRET: ${API_CLIENT_SECRET}
       CDMS_USERNAME: ${CDMS_USERNAME}
       CDMS_PASSWORD: ${CDMS_PASSWORD}
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_USER_PASSWORD: ${TEST_USER_PASSWORD}
     ports:
       - "8000:8000"
     entrypoint: dockerize -wait http://es:9200 -wait tcp://postgres-django:5432 -timeout 120s
@@ -91,8 +99,6 @@ services:
       DATABASE_ODATA_URL: ${DATABASE_ODATA_URL}
       ES_HOST: ${ES_HOST}
       ES_PORT: ${ES_PORT}
-
-      # magical secrets below
       CDMS_ADFS_URL: ${CDMS_ADFS_URL}
       CDMS_BASE_URL: ${CDMS_BASE_URL}
       CDMS_USERNAME: ${CDMS_USERNAME}
@@ -102,7 +108,6 @@ services:
       CDMS_COOKIE_PATH: ${CDMS_COOKIE_PATH}
       ODATA_ENTITY_CONTAINER_KEY: ${ODATA_ENTITY_CONTAINER_KEY}
       DATAHUB_SECRET: ${DATAHUB_SECRET}
-      KORBEN_SENTRY_DSN: ${KORBEN_SENTRY_DSN}
     links:
       - postgres-django
       - postgres-odata
