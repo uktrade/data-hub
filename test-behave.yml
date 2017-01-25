@@ -79,7 +79,7 @@ services:
       - es
       - korben
       - redis
-    command: /app/start.sh
+    command: /app/leeloo/behave-start.sh
 
   korben:
     build:
