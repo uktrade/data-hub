@@ -21,7 +21,7 @@ services:
       - leeloo
       - korben
       - selenium
-    entrypoint: dockerize -wait http://rhod:3000/login -wait tcp://selenium:4444 -timeout 120s
+    entrypoint: dockerize -wait http://rhod:3000/login -wait http://korben:8080/health/ -wait http://leeloo:8000/admin/login/ -timeout 300s
     environment:
       RHOD_PORT: 3000
       SELENIUM_PORT: 4444
@@ -50,7 +50,6 @@ services:
     depends_on:
       - redis
       - leeloo
-    entrypoint: dockerize -wait http://leeloo:8000/admin/login/ -timeout 120s
     command: npm start
     ports:
       - "3000:3000"
@@ -89,7 +88,7 @@ services:
       TEST_USER_PASSWORD: ${TEST_USER_PASSWORD}
     ports:
       - "8000:8000"
-    entrypoint: dockerize -wait http://es:9200 -wait tcp://postgres-django:5432 -wait http://korben:8080 -timeout 120s
+    entrypoint: dockerize -wait http://es:9200 -wait tcp://postgres-django:5432 -timeout 120s
     links:
       - postgres-django
       - es
@@ -122,7 +121,7 @@ services:
       - postgres-odata
       - es
       - redis
-    command: gunicorn -b 0.0.0.0:8080 korben.bau.webserver:wsgi_app
+    command: korben bau
     ports:
       - "8080:8080"
 
