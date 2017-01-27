@@ -117,13 +117,12 @@ services:
       ODATA_ENTITY_CONTAINER_KEY: ${ODATA_ENTITY_CONTAINER_KEY}
       DATAHUB_SECRET: ${DATAHUB_SECRET}
       KORBEN_SENTRY_DSN: ${KORBEN_SENTRY_DSN}
-    entrypoint: dockerize -wait tcp://postgres-django:5432 -wait tcp://postgres-odata:5432 -timeout 120s
     links:
       - postgres-django
       - postgres-odata
       - es
       - redis
-    command: korben bau #gunicorn -b 0.0.0.0:8080 korben.bau.webserver:wsgi_app
+    command: gunicorn -b 0.0.0.0:8080 korben.bau.webserver:wsgi_app
     ports:
       - "8080:8080"
 
