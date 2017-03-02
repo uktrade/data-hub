@@ -3,7 +3,7 @@
 | Codename       | Date of release | Version |
 | ------         | ------          | ------  |
 | ~~Absinthe~~   | 28/02/2017      | 0.17    |
-| Brandy         |                 |         |
+| ~~Brandy~~     | 02/03/2017      | 0.18    |
 | Chartreuse     |                 |         |
 | Disaronno      |                 |         |
 | Eggnog         |                 |         |
