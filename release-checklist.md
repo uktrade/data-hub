@@ -3,7 +3,7 @@ Release checklist
 
 Creating the release
 --------------------
-1. Grab the release name and number from [here](https://github.com/uktrade/data-hub/blob/master/releases-codenames.md)
+1. Grab the release name and number from [here](https://github.com/uktrade/data-hub/blob/master/release-codenames.md)
 1. Release branch created off develop at a given commit
 2. Confirm CI is green on release branch
 3. Confirm users have been made aware of scheduled downtime
