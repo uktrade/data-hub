@@ -12,6 +12,7 @@ Creating the release
 
 Deploying the release
 ---------------------
+6. Schedule the release with the delivery manager
 6. Make sure someone is with you
 7. Stop the celery workers
 8. Trigger Jenkins job to release
