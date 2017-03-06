@@ -6,7 +6,7 @@
 | ~~Brandy~~     | 02/03/2017      | 0.18    |
 | Chartreuse     |                 |         |
 | Disaronno      |                 |         |
-| Eggnog         |                 |         |
+| Eau de vie     |                 |         |
 | Fernet         |                 |         |
 | Gin            |                 |         |
 | Himbeergeist   |                 |         |
@@ -20,9 +20,9 @@
 | Pisco          |                 |         |
 | Queimada       |                 |         |
 | Rum            |                 |         |
-| Sake           |                 |         |
+| Sliwowitz      |                 |         |
 | Tequila        |                 |         |
-| Urge           |                 |         |
+| Uisge Beatha   |                 |         |
 | Vodka          |                 |         |
 | Whisky         |                 |         |
 | X-rated fusion |                 |         |
