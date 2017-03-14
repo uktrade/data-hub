@@ -4,7 +4,7 @@
 | ------         | ------          | ------  |
 | ~~Absinthe~~   | 28/02/2017      | 0.17    |
 | ~~Brandy~~     | 02/03/2017      | 0.18    |
-| Chartreuse     |                 |         |
+| ~~chartreuse~~ | 14/03/2017      | 0.19    |
 | Disaronno      |                 |         |
 | Eau de vie     |                 |         |
 | Fernet         |                 |         |
