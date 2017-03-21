@@ -1,0 +1,533 @@
+swagger: '2.0'
+info:
+  description: Data Hub Company V2
+  version: 1.0.0
+  title: Company API
+  # put the contact info for your development or API team
+  contact:
+    email: jim.smith@digital.trade.gov.uk
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+# all paths will be relative to the basePath specified
+# basePath: /v2
+
+# tags are used for organizing operationsd
+tags:
+- name: public
+  description: API open to DH client
+- name: company
+  description: Belongs to company operations in DH
+schemes:
+- https
+paths:
+  /company:
+    get:
+      tags:
+      - company
+      summary: Returns a company from the Data Hub repository
+      operationId: getcompany
+      description: |
+        Passing in a company UUID returns a partially hydrated company object
+      produces:
+      - application/vnd.api+json
+      parameters:
+      - in: query
+        name: companyId
+        description: UUID for a Data Hub company
+        required: true
+        type: string
+      responses:
+        200:
+          description: JSON API formatted company object
+          schema:
+            $ref: '#/definitions/Company'
+        400:
+          description: bad input parameter
+        404:
+          description: company does not exist
+    post:
+      tags:
+      - company
+      summary: adds a Data Hub company
+      operationId: addCompany
+      description: Adds a Data Hub company from a Companies House company
+      consumes:
+      - application/vnd.api+json
+      produces:
+      - application/vnd.api+json
+      parameters:
+      - in: body
+        name: company
+        description: Company to add
+        required: true
+        schema:
+          $ref: '#/definitions/FlatCompany'
+      responses:
+        201:
+          description: item created
+        400:
+          description: invalid input, object invalid
+        409:
+          description: company already exists
+    put:
+      tags:
+      - company
+      summary: updates a company, creating a new one if not found
+      operationId: updateCompany
+      description: Updates an existing company
+      consumes:
+      - application/vnd.api+json
+      produces:
+      - application/vnd.api+json
+      parameters:
+      - in: query
+        name: companyId
+        description: UUID for a Data Hub company
+        type: string
+        required: true
+      - in: body
+        name: company
+        description: Company data to update
+        required: true
+        schema:
+          $ref: '#/definitions/FlatCompany'
+      responses:
+        200:
+          description: item updated
+        201:
+          description: item created
+        400:
+          description: invalid input, object invalid
+definitions:
+  Company:
+    type: object
+    description: The company that is returned from a GET request contains some pre-expansion of metadata for the convenience of the front end
+    required:
+    - id
+    - name
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      name:
+        type: string
+        example: "EXAMPLE Ltd"
+      trading_name:
+        type: string
+        example: "Example Trading"
+      companies_house_data:
+        $ref: '#/definitions/CompaniesHouse'
+      interactions:
+        type: array
+        items:
+          type: string
+          format: uuid
+        example: ["d290f1ee-6c54-4b01-90e6-d701748f0851", "d290f1ee-6c54-4b01-90e6-d701748f0851"]
+      contacts:
+        type: array
+        items:
+          type: string
+          format: uuid
+        example: ["d290f1ee-6c54-4b01-90e6-d701748f0851", "d290f1ee-6c54-4b01-90e6-d701748f0851"]
+      export_to_countries:
+        type: array
+        items:
+          type: string
+          format: uuid
+        example: ["d290f1ee-6c54-4b01-90e6-d701748f0851", "d290f1ee-6c54-4b01-90e6-d701748f0851"]
+      future_interest_countries:
+        type: array
+        items:
+          type: string
+          format: uuid
+        example: ["d290f1ee-6c54-4b01-90e6-d701748f0851", "d290f1ee-6c54-4b01-90e6-d701748f0851"]
+      parents:
+        type: array
+        items:
+          type: string
+          format: uuid
+        example: ["d290f1ee-6c54-4b01-90e6-d701748f0851", "d290f1ee-6c54-4b01-90e6-d701748f0851"]
+      children:
+        type: array
+        items:
+          type: string
+          format: uuid
+        example: ["d290f1ee-6c54-4b01-90e6-d701748f0851", "d290f1ee-6c54-4b01-90e6-d701748f0851"]
+      one_list_owner:
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      uk_based:
+        type: boolean
+      account_manager:
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      registered_address_1:
+        type: string
+        example: "123 HIGH STREET"
+      registered_address_2:
+        type: string
+        example: "AREA"
+      registered_address_3:
+        type: string
+        example: "SUBTOWN"
+      registered_address_4:
+        type: string
+        example: "SUBREGION"
+      registered_address_town:
+        type: string
+        example: "ANYTOWN"
+      registered_address_country:
+        $ref: '#/definitions/Country'
+      registered_address_county:
+        type: string
+        example: "ANYSHIRE"
+      registered_address_postcode:
+        type: string
+        example: "AB1 2CD"
+      created_on:
+        type: string
+        format: date-time
+        example: 2014-07-23T10:36:04
+      modified_on:
+        type: string
+        format: date-time
+        example: 2014-07-23T10:36:04
+      archived:
+        type: boolean
+      archived_on:
+        type: string
+        format: date-time
+        example: 2014-07-23T10:36:04
+      archived_reason:
+        type: string
+        example: "Company dissolved"
+      archived_by:
+        type: string
+        example: "A N Advisor"
+      company_number:
+        type: string
+        example: 12345678
+      alias:
+        type: string
+        example: "EXAMPLE TRADING"
+      lead:
+        type: boolean
+      description:
+        type: string
+        example: "MANUFACTURER OF WIDGETS AND DOODADS"
+      website:
+        type: string
+        example: "http://www.example.com"
+      trading_address_1:
+        type: string
+        example: "123 HIGH STREET"
+      trading_address_2:
+        type: string
+        example: "AREA"
+      trading_address_3:
+        type: string
+        example: "SUBTOWN"
+      trading_address_4:
+        type: string
+        example: "SUBREGION"
+      trading_address_town:
+        type: string
+        example: "ANYTOWN"
+      trading_address_county:
+        type: string
+        example: "ANYSHIRE"
+      trading_address_postcode:
+        type: string
+        example: "AB1 2CD"
+      trading_address_country:
+        $ref: '#/definitions/Country'
+      headquarter_type:
+        type: string
+        example: "UK Headquarters"
+      classification:
+        type: string
+        example: "?????????"
+      business_type:
+        $ref: '#/definitions/BusinessType'
+      sector:
+        $ref: '#/definitions/Sector'
+      employee_range:
+        $ref: '#/definitions/EmployeeRange'
+      turnover_range:
+        $ref: '#/definitions/TurnoverRange'
+      uk_region:
+        $ref: '#/definitions/UKRegion'
+  FlatCompany:
+    type: object
+    description: By contast with Company, the object sent to the back end as part of a PUT or POST contains no expansion
+    required:
+    - id
+    - name
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      name:
+        type: string
+        example: "EXAMPLE Ltd"
+      trading_name:
+        type: string
+        example: "Example Trading"
+      companies_house_data:
+        type: object
+        example: {}
+      interactions:
+        type: array
+        items:
+          type: string
+          format: uuid
+        example: ["d290f1ee-6c54-4b01-90e6-d701748f0851", "d290f1ee-6c54-4b01-90e6-d701748f0851"]
+      contacts:
+        type: array
+        items:
+          type: string
+          format: uuid
+        example: ["d290f1ee-6c54-4b01-90e6-d701748f0851", "d290f1ee-6c54-4b01-90e6-d701748f0851"]
+      export_to_countries:
+        type: array
+        items:
+          type: string
+          format: uuid
+        example: ["d290f1ee-6c54-4b01-90e6-d701748f0851", "d290f1ee-6c54-4b01-90e6-d701748f0851"]
+      future_interest_countries:
+        type: array
+        items:
+          type: string
+          format: uuid
+        example: ["d290f1ee-6c54-4b01-90e6-d701748f0851", "d290f1ee-6c54-4b01-90e6-d701748f0851"]
+      parents:
+        type: array
+        items:
+          type: string
+          format: uuid
+        example: ["d290f1ee-6c54-4b01-90e6-d701748f0851", "d290f1ee-6c54-4b01-90e6-d701748f0851"]
+      children:
+        type: array
+        items:
+          type: string
+          format: uuid
+        example: ["d290f1ee-6c54-4b01-90e6-d701748f0851", "d290f1ee-6c54-4b01-90e6-d701748f0851"]
+      one_list_owner:
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      uk_based:
+        type: boolean
+      account_manager:
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      registered_address_1:
+        type: string
+        example: "123 HIGH STREET"
+      registered_address_2:
+        type: string
+        example: "AREA"
+      registered_address_3:
+        type: string
+        example: "SUBTOWN"
+      registered_address_4:
+        type: string
+        example: "SUBREGION"
+      registered_address_town:
+        type: string
+        example: "ANYTOWN"
+      registered_address_country:
+        $ref: '#/definitions/Country'
+      registered_address_county:
+        type: string
+        example: "ANYSHIRE"
+      registered_address_postcode:
+        type: string
+        example: "AB1 2CD"
+      created_on:
+        type: string
+        format: date-time
+        example: 2014-07-23T10:36:04
+      modified_on:
+        type: string
+        format: date-time
+        example: 2014-07-23T10:36:04
+      archived:
+        type: boolean
+      archived_on:
+        type: string
+        format: date-time
+        example: 2014-07-23T10:36:04
+      archived_reason:
+        type: string
+        example: "Company dissolved"
+      archived_by:
+        type: string
+        example: "A N Advisor"
+      company_number:
+        type: string
+        example: 12345678
+      alias:
+        type: string
+        example: "EXAMPLE TRADING"
+      lead:
+        type: boolean
+      description:
+        type: string
+        example: "MANUFACTURER OF WIDGETS AND DOODADS"
+      website:
+        type: string
+        example: "http://www.example.com"
+      trading_address_1:
+        type: string
+        example: "123 HIGH STREET"
+      trading_address_2:
+        type: string
+        example: "AREA"
+      trading_address_3:
+        type: string
+        example: "SUBTOWN"
+      trading_address_4:
+        type: string
+        example: "SUBREGION"
+      trading_address_town:
+        type: string
+        example: "ANYTOWN"
+      trading_address_county:
+        type: string
+        example: "ANYSHIRE"
+      trading_address_postcode:
+        type: string
+        example: "AB1 2CD"
+      trading_address_country:
+        $ref: '#/definitions/Country'
+      headquarter_type:
+        type: string
+        example: "UK Headquarters"
+      classification:
+        type: string
+        example: "?????????"
+      business_type:
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      sector:
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      employee_range:
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      turnover_range:
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      uk_region:
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+  Country:
+    type: object
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      name:
+        type: string
+        example: "Fredonia"
+  BusinessType:
+    type: object
+    required:
+      - id
+      - name
+      - selectable
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      name:
+        type: string
+        example: "Private"
+      selectable:
+        type: boolean
+  EmployeeRange:
+    type: object
+    required:
+      - id
+      - name
+      - selectable
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      name:
+        type: string
+        example: "1 to 9"
+      selectable:
+        type: boolean
+  Sector:
+    type: object
+    required:
+      - id
+      - name
+      - selectable
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      name:
+        type: string
+        example: "Manufacturing"
+      selectable:
+        type: boolean
+  TurnoverRange:
+    type: object
+    required:
+      - id
+      - name
+      - selectable
+    properties:
+      id:
+        type: string
+        format: uuid
+      name:
+        type: string
+        example: "...1 to 1.3m"
+      selectable:
+        type: boolean
+  UKRegion:
+    type: object
+    required:
+      - id
+      - name
+      - selectable
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      name:
+        type: string
+        example: "England"
+      selectable:
+        type: boolean
+
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+# Added by API Auto Mocking Plugin
+basePath: /jim68000/company_v2/1.0.0
