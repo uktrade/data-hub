@@ -180,7 +180,9 @@ definitions:
         type: string
         example: "ANYTOWN"
       registered_address_country:
-        $ref: '#/definitions/Country'
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
       registered_address_county:
         type: string
         example: "ANYSHIRE"
