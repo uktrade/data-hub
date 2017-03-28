@@ -3,17 +3,14 @@ info:
   description: Data Hub Company V2
   version: 1.0.0
   title: Company API
-  # put the contact info for your development or API team
   contact:
     email: jim.smith@digital.trade.gov.uk
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
 
-# all paths will be relative to the basePath specified
 basePath: /v2
 
-# tags are used for organizing operations
 tags:
 - name: public
   description: API open to DH client
