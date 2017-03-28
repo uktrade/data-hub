@@ -133,6 +133,11 @@ definitions:
         type: object
         required:
         - name
+        - registered_address_1
+        - registered_address_town
+        - registered_address_country
+        - business_type
+        - sector
         properties:
           id:
             type: string
@@ -144,52 +149,8 @@ definitions:
           trading_name:
             type: string
             example: "Example Trading"
-          interactions:
-            type: array
-            items:
-              type: string
-              format: uuid
-            example: ["d290f1ee-6c54-4b01-90e6-d701748f0851", "d290f1ee-6c54-4b01-90e6-d701748f0851"]
-          contacts:
-            type: array
-            items:
-              type: string
-              format: uuid
-            example: ["d290f1ee-6c54-4b01-90e6-d701748f0851", "d290f1ee-6c54-4b01-90e6-d701748f0851"]
-          export_to_countries:
-            type: array
-            items:
-              type: string
-              format: uuid
-            example: ["d290f1ee-6c54-4b01-90e6-d701748f0851", "d290f1ee-6c54-4b01-90e6-d701748f0851"]
-          future_interest_countries:
-            type: array
-            items:
-              type: string
-              format: uuid
-            example: ["d290f1ee-6c54-4b01-90e6-d701748f0851", "d290f1ee-6c54-4b01-90e6-d701748f0851"]
-          parents:
-            type: array
-            items:
-              type: string
-              format: uuid
-            example: ["d290f1ee-6c54-4b01-90e6-d701748f0851", "d290f1ee-6c54-4b01-90e6-d701748f0851"]
-          children:
-            type: array
-            items:
-              type: string
-              format: uuid
-            example: ["d290f1ee-6c54-4b01-90e6-d701748f0851", "d290f1ee-6c54-4b01-90e6-d701748f0851"]
-          one_list_owner:
-            type: string
-            format: uuid
-            example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
           uk_based:
             type: boolean
-          account_manager:
-            type: string
-            format: uuid
-            example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
           registered_address_1:
             type: string
             example: "123 HIGH STREET"
@@ -205,10 +166,6 @@ definitions:
           registered_address_town:
             type: string
             example: "ANYTOWN"
-          registered_address_country:
-            type: string
-            format: uuid
-            example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
           registered_address_county:
             type: string
             example: "ANYSHIRE"
@@ -270,34 +227,276 @@ definitions:
           trading_address_postcode:
             type: string
             example: "AB1 2CD"
-          trading_address_country:
-            type: string
-            format: uuid
-            example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
           headquarter_type:
             type: string
             example: "UK Headquarters"
-          classification:
+          relationships:
+            $ref: '#/definitions/CompanyRelationships'
+  CompanyRelationships:
+    type: object
+    properties:
+      account_manager:
+        $ref: '#/definitions/Adviser'
+      business_type:
+        $ref: '#/definitions/BusinessType'
+      children:
+        $ref: '#/definitions/CompanyKeyArray'
+      classification:
+        $ref: '#/definitions/Classification'
+      contacts:
+        $ref: '#/definitions/ContactArray'
+      employee_range:
+        $ref: '#/definitions/EmployeeRange'
+      export_to_countries:
+        $ref: '#/definitions/CountryArray'
+      future_interest_countries:
+        $ref: '#/definitions/CountryArray'
+      interactions:
+        $ref: '#/definitions/InteractionArray'
+      one_list_owner:
+        $ref: '#/definitions/Adviser'
+      parents:
+        $ref: '#/definitions/CompanyKeyArray'
+      registered_address_country:
+          $ref: '#/definitions/Country'
+      sector:
+        $ref: '#/definitions/Sector'
+      trading_address_country:
+          $ref: '#/definitions/Country'
+      turnover_range:
+        $ref: '#/definitions/TurnoverRange'
+      uk_region:
+        $ref: '#/definitions/UKRegion'
+  Adviser:
+    type: object
+    required:
+    - data
+    properties:
+      data:
+        type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
             type: string
             format: uuid
             example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          business_type:
+          name:
+            type: string
+            example: "Fred Jones"
+  BusinessType:
+    type: object
+    required:
+    - data
+    properties:
+      data:
+        type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
             type: string
             format: uuid
             example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          sector:
+          name:
+            type: string
+            example: "Private"
+  Classification:
+    type: object
+    required:
+    - data
+    properties:
+      data:
+        type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
             type: string
             format: uuid
             example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          employee_range:
+          name:
+            type: string
+            example: "10519"
+  CompanyKey:
+    type: object
+    required:
+    - data
+    properties:
+      data:
+        type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
             type: string
             format: uuid
             example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          turnover_range:
+          name:
+            type: string
+            example: "EXAMPLE LTD" 
+  CompanyKeyArray:
+    type: object
+    required:
+    - data
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/CompanyKey'
+  Contact:
+    type: object
+    required:
+    - data
+    properties:
+      data:
+        type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
             type: string
             format: uuid
             example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          uk_region:
+          name:
+            type: string
+            example: "Fred Bloggs"
+  ContactArray:
+    type: object
+    required:
+    - data
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Contact'
+  Country:
+    type: object
+    required:
+    - data
+    properties:
+      data:
+        type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
             type: string
             format: uuid
             example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          name:
+            type: string
+            example: "Fredonia"
+  CountryArray:
+    type: object
+    required:
+    - data
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Country'
+  Interaction:
+    type: object
+    required:
+    - data
+    properties:
+      data:
+        type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
+            type: string
+            format: uuid
+            example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          name:
+            type: string
+            example: "Subject of Interaction"
+  InteractionArray:
+    type: object
+    required:
+    - data
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Interaction'
+  EmployeeRange:
+    type: object
+    required:
+    - data
+    properties:
+      data:
+        type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
+            type: string
+            format: uuid
+            example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          name:
+            type: string
+            example: "1 to 9"
+  Sector:
+    type: object
+    required:
+    - data
+    properties:
+      data:
+        type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
+            type: string
+            format: uuid
+            example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          name:
+            type: string
+            example: "Manufacturing"
+  TurnoverRange:
+    type: object
+    required:
+    - data
+    properties:
+      data:
+        type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
+            type: string
+            format: uuid
+          name:
+            type: string
+            example: "...1 to 1.3m"
+  UKRegion:
+    type: object
+    required:
+      - data
+    properties:
+      data:
+        type: object
+        required: 
+          - id
+          - name
+        properties:
+          id:
+            type: string
+            format: uuid
+            example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          name:
+            type: string
+            example: "England"
