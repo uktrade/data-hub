@@ -22,7 +22,7 @@ tags:
 schemes:
 - https
 paths:
-  /company:
+  /company/{companyId}:
     get:
       tags:
       - company
@@ -33,11 +33,12 @@ paths:
       produces:
       - application/vnd.api+json
       parameters:
-      - in: query
+      - in: path
         name: companyId
         description: UUID for a Data Hub company
         required: true
         type: string
+        format: uuid
       responses:
         200:
           description: JSON API formatted company object
@@ -47,6 +48,36 @@ paths:
           description: bad input parameter
         404:
           description: company does not exist
+    put:
+      tags:
+      - company
+      summary: updates a company, creating a new one if not found
+      operationId: updateCompany
+      description: Updates an existing company
+      consumes:
+      - application/vnd.api+json
+      produces:
+      - application/vnd.api+json
+      parameters:
+      - in: path
+        name: companyId
+        description: UUID for a Data Hub company
+        type: string
+        required: true
+      - in: body
+        name: company
+        description: Company data to update
+        required: true
+        schema:
+          $ref: '#/definitions/Company'
+      responses:
+        200:
+          description: item updated
+        201:
+          description: item created
+        400:
+          description: invalid input, object invalid
+  /company:
     post:
       tags:
       - company
@@ -71,35 +102,25 @@ paths:
           description: invalid input, object invalid
         409:
           description: company already exists
-    put:
-      tags:
-      - company
-      summary: updates a company, creating a new one if not found
-      operationId: updateCompany
-      description: Updates an existing company
-      consumes:
-      - application/vnd.api+json
-      produces:
-      - application/vnd.api+json
-      parameters:
-      - in: query
-        name: companyId
-        description: UUID for a Data Hub company
-        type: string
-        required: true
-      - in: body
-        name: company
-        description: Company data to update
-        required: true
-        schema:
-          $ref: '#/definitions/Company'
-      responses:
-        200:
-          description: item updated
-        201:
-          description: item created
-        400:
-          description: invalid input, object invalid
+# Placeholder for future expansion
+#  /companies/:
+#    get:
+#      tags: 
+#      - company
+#      summary: returns a list of company objects
+#      operationId: getCompanies
+#      description: returns a list of companies predicated on some filter - placeholder for future expansion
+#      consumes:
+#      - application/vnd.api+json
+#      produces:
+#      - application/vnd.api+json
+#      responses:
+#        200:
+#          description: List of companies
+#          schema:
+#            type: array
+#            items:
+#              $ref: '#/definitions/Company'
 definitions:
   Company:
     type: object
@@ -110,6 +131,8 @@ definitions:
       data: 
         title: Company
         type: object
+        required:
+        - name
         properties:
           id:
             type: string
