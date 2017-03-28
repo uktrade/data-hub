@@ -189,9 +189,6 @@ definitions:
           archived_by:
             type: string
             example: "A N Advisor"
-          company_number:
-            type: string
-            example: 12345678
           alias:
             type: string
             example: "EXAMPLE TRADING"
@@ -240,6 +237,8 @@ definitions:
         $ref: '#/definitions/CompanyKeyArray'
       classification:
         $ref: '#/definitions/Classification'
+      companies_house_data:
+        $ref: '#/definitions/CompaniesHouseData'
       contacts:
         $ref: '#/definitions/ContactArray'
       employee_range:
@@ -318,6 +317,24 @@ definitions:
           name:
             type: string
             example: "10519"
+  CompaniesHouseData:
+    type: object
+    required:
+    - data
+    properties:
+      data:
+        type: object
+        required:
+          - id
+          - name
+        properties:
+          id:
+            type: string
+            format: string
+            example: "SCO-123456"
+          name:
+            type: string
+            example: "Companies House"
   CompanyKey:
     type: object
     required:
