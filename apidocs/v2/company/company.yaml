@@ -13,7 +13,7 @@ basePath: /v2
 
 tags:
 - name: public
-  description: API open to DH client
+  description: API open to Data Hub client
 - name: company
   description: Belongs to company operations in DH
 schemes:
