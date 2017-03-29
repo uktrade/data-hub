@@ -230,7 +230,7 @@ definitions:
     type: object
     properties:
       account_manager:
-        $ref: '#/definitions/Adviser'
+        $ref: '#/definitions/Advisor'
       business_type:
         $ref: '#/definitions/BusinessType'
       children:
@@ -250,7 +250,7 @@ definitions:
       interactions:
         $ref: '#/definitions/InteractionArray'
       one_list_owner:
-        $ref: '#/definitions/Adviser'
+        $ref: '#/definitions/Advisor'
       parents:
         $ref: '#/definitions/CompanyKeyArray'
       registered_address_country:
@@ -263,7 +263,7 @@ definitions:
         $ref: '#/definitions/TurnoverRange'
       uk_region:
         $ref: '#/definitions/UKRegion'
-  Adviser:
+  Advisor:
     type: object
     required:
     - data
@@ -272,15 +272,15 @@ definitions:
         type: object
         required:
           - id
-          - name
+          - type
         properties:
           id:
             type: string
             format: uuid
             example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          name:
+          type:
             type: string
-            example: "Fred Jones"
+            example: "Advisor"
   BusinessType:
     type: object
     required:
@@ -290,15 +290,15 @@ definitions:
         type: object
         required:
           - id
-          - name
+          - type
         properties:
           id:
             type: string
             format: uuid
             example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          name:
+          type:
             type: string
-            example: "Private"
+            example: "BusinessType"
   Classification:
     type: object
     required:
@@ -308,15 +308,15 @@ definitions:
         type: object
         required:
           - id
-          - name
+          - type
         properties:
           id:
             type: string
             format: uuid
             example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          name:
+          type:
             type: string
-            example: "10519"
+            example: "OneListClassifaction"
   CompaniesHouseData:
     type: object
     required:
@@ -326,15 +326,15 @@ definitions:
         type: object
         required:
           - id
-          - name
+          - type
         properties:
           id:
             type: string
             format: string
             example: "SCO-123456"
-          name:
+          type:
             type: string
-            example: "Companies House"
+            example: "CompaniesHouse"
   CompanyKey:
     type: object
     required:
@@ -344,15 +344,15 @@ definitions:
         type: object
         required:
           - id
-          - name
+          - type
         properties:
           id:
             type: string
             format: uuid
             example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          name:
+          type:
             type: string
-            example: "EXAMPLE LTD" 
+            example: "Company" 
   CompanyKeyArray:
     type: object
     required:
@@ -371,15 +371,15 @@ definitions:
         type: object
         required:
           - id
-          - name
+          - type
         properties:
           id:
             type: string
             format: uuid
             example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          name:
+          type:
             type: string
-            example: "Fred Bloggs"
+            example: "Contact"
   ContactArray:
     type: object
     required:
@@ -398,15 +398,15 @@ definitions:
         type: object
         required:
           - id
-          - name
+          - type
         properties:
           id:
             type: string
             format: uuid
             example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          name:
+          type:
             type: string
-            example: "Fredonia"
+            example: "Country"
   CountryArray:
     type: object
     required:
@@ -425,15 +425,15 @@ definitions:
         type: object
         required:
           - id
-          - name
+          - type
         properties:
           id:
             type: string
             format: uuid
             example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          name:
+          type:
             type: string
-            example: "Subject of Interaction"
+            example: "Interaction"
   InteractionArray:
     type: object
     required:
@@ -452,15 +452,15 @@ definitions:
         type: object
         required:
           - id
-          - name
+          - type
         properties:
           id:
             type: string
             format: uuid
             example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          name:
+          type:
             type: string
-            example: "1 to 9"
+            example: "EmployeeRange"
   Sector:
     type: object
     required:
@@ -470,15 +470,15 @@ definitions:
         type: object
         required:
           - id
-          - name
+          - type
         properties:
           id:
             type: string
             format: uuid
             example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          name:
+          type:
             type: string
-            example: "Manufacturing"
+            example: "Sector"
   TurnoverRange:
     type: object
     required:
@@ -488,14 +488,14 @@ definitions:
         type: object
         required:
           - id
-          - name
+          - type
         properties:
           id:
             type: string
             format: uuid
-          name:
+          type:
             type: string
-            example: "...1 to 1.3m"
+            example: "TurnoverRange"
   UKRegion:
     type: object
     required:
@@ -505,12 +505,12 @@ definitions:
         type: object
         required: 
           - id
-          - name
+          - type
         properties:
           id:
             type: string
             format: uuid
             example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          name:
+          type:
             type: string
-            example: "England"
+            example: "UKRegion"
