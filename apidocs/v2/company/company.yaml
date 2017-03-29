@@ -125,107 +125,125 @@ definitions:
     required:
     - data
     properties:
-      data: 
-        title: Company
+      data:
+        title: Company Top Level
         type: object
         required:
-        - name
-        - registered_address_1
-        - registered_address_town
-        - registered_address_country
-        - business_type
-        - sector
+        - type
+        - attributes
+        - relationships
+        - links
         properties:
+          type:
+            type: string
+            example: "Company"
           id:
             type: string
             format: uuid
             example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          name:
-            type: string
-            example: "EXAMPLE Ltd"
-          trading_name:
-            type: string
-            example: "Example Trading"
-          uk_based:
-            type: boolean
-          registered_address_1:
-            type: string
-            example: "123 HIGH STREET"
-          registered_address_2:
-            type: string
-            example: "AREA"
-          registered_address_3:
-            type: string
-            example: "SUBTOWN"
-          registered_address_4:
-            type: string
-            example: "SUBREGION"
-          registered_address_town:
-            type: string
-            example: "ANYTOWN"
-          registered_address_county:
-            type: string
-            example: "ANYSHIRE"
-          registered_address_postcode:
-            type: string
-            example: "AB1 2CD"
-          created_on:
-            type: string
-            format: date-time
-            example: 2014-07-23T10:36:04
-          modified_on:
-            type: string
-            format: date-time
-            example: 2014-07-23T10:36:04
-          archived:
-            type: boolean
-          archived_on:
-            type: string
-            format: date-time
-            example: 2014-07-23T10:36:04
-          archived_reason:
-            type: string
-            example: "Company dissolved"
-          archived_by:
-            type: string
-            example: "A N Advisor"
-          alias:
-            type: string
-            example: "EXAMPLE TRADING"
-          lead:
-            type: boolean
-          description:
-            type: string
-            example: "MANUFACTURER OF WIDGETS AND DOODADS"
-          website:
-            type: string
-            example: "http://www.example.com"
-          trading_address_1:
-            type: string
-            example: "123 HIGH STREET"
-          trading_address_2:
-            type: string
-            example: "AREA"
-          trading_address_3:
-            type: string
-            example: "SUBTOWN"
-          trading_address_4:
-            type: string
-            example: "SUBREGION"
-          trading_address_town:
-            type: string
-            example: "ANYTOWN"
-          trading_address_county:
-            type: string
-            example: "ANYSHIRE"
-          trading_address_postcode:
-            type: string
-            example: "AB1 2CD"
-          headquarter_type:
-            type: string
-            example: "UK Headquarters"
+          attributes:
+            title: Company
+            type: object
+            required:
+            - name
+            - registered_address_1
+            - registered_address_town
+            - registered_address_country
+            - business_type
+            - sector
+            properties:
+              name:
+                type: string
+                example: "EXAMPLE Ltd"
+              trading_name:
+                type: string
+                example: "Example Trading"
+              uk_based:
+                type: boolean
+              registered_address_1:
+                type: string
+                example: "123 HIGH STREET"
+              registered_address_2:
+                type: string
+                example: "AREA"
+              registered_address_3:
+                type: string
+                example: "SUBTOWN"
+              registered_address_4:
+                type: string
+                example: "SUBREGION"
+              registered_address_town:
+                type: string
+                example: "ANYTOWN"
+              registered_address_county:
+                type: string
+                example: "ANYSHIRE"
+              registered_address_postcode:
+                type: string
+                example: "AB1 2CD"
+              created_on:
+                type: string
+                format: date-time
+                example: 2014-07-23T10:36:04
+              modified_on:
+                type: string
+                format: date-time
+                example: 2014-07-23T10:36:04
+              archived:
+                type: boolean
+              archived_on:
+                type: string
+                format: date-time
+                example: 2014-07-23T10:36:04
+              archived_reason:
+                type: string
+                example: "Company dissolved"
+              archived_by:
+                type: string
+                example: "A N Advisor"
+              alias:
+                type: string
+                example: "EXAMPLE TRADING"
+              lead:
+                type: boolean
+              description:
+                type: string
+                example: "MANUFACTURER OF WIDGETS AND DOODADS"
+              website:
+                type: string
+                example: "http://www.example.com"
+              trading_address_1:
+                type: string
+                example: "123 HIGH STREET"
+              trading_address_2:
+                type: string
+                example: "AREA"
+              trading_address_3:
+                type: string
+                example: "SUBTOWN"
+              trading_address_4:
+                type: string
+                example: "SUBREGION"
+              trading_address_town:
+                type: string
+                example: "ANYTOWN"
+              trading_address_county:
+                type: string
+                example: "ANYSHIRE"
+              trading_address_postcode:
+                type: string
+                example: "AB1 2CD"
+              headquarter_type:
+                type: string
+                example: "UK Headquarters"
           relationships:
             $ref: '#/definitions/CompanyRelationships'
+          links: 
+            type: object
+            properties: 
+              self:
+                type: string
+                example: "http://HOST/v2/company/d290f1ee-6c54-4b01-90e6-d701748f0851"
   CompanyRelationships:
     type: object
     properties:
@@ -335,24 +353,6 @@ definitions:
           type:
             type: string
             example: "CompaniesHouse"
-  CompanyKey:
-    type: object
-    required:
-    - data
-    properties:
-      data:
-        type: object
-        required:
-          - id
-          - type
-        properties:
-          id:
-            type: string
-            format: uuid
-            example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          type:
-            type: string
-            example: "Company" 
   CompanyKeyArray:
     type: object
     required:
@@ -361,25 +361,20 @@ definitions:
       data:
         type: array
         items:
-          $ref: '#/definitions/CompanyKey'
-  Contact:
+          $ref: '#/definitions/CompanyRaw'
+  CompanyRaw:
     type: object
     required:
-    - data
+      - id
+      - type
     properties:
-      data:
-        type: object
-        required:
-          - id
-          - type
-        properties:
-          id:
-            type: string
-            format: uuid
-            example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          type:
-            type: string
-            example: "Contact"
+      id:
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      type:
+        type: string
+        example: "Company" 
   ContactArray:
     type: object
     required:
@@ -388,7 +383,20 @@ definitions:
       data:
         type: array
         items:
-          $ref: '#/definitions/Contact'
+          $ref: '#/definitions/ContactRaw'
+  ContactRaw:
+    type: object
+    required:
+      - id
+      - type
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      type:
+        type: string
+        example: "Contact"
   Country:
     type: object
     required:
@@ -396,17 +404,7 @@ definitions:
     properties:
       data:
         type: object
-        required:
-          - id
-          - type
-        properties:
-          id:
-            type: string
-            format: uuid
-            example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          type:
-            type: string
-            example: "Country"
+        $ref: '#/definitions/CountryRaw'
   CountryArray:
     type: object
     required:
@@ -415,25 +413,33 @@ definitions:
       data:
         type: array
         items:
-          $ref: '#/definitions/Country'
+          $ref: '#/definitions/CountryRaw'
+  CountryRaw:
+    type: object
+    required:
+      - id
+      - type
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      type:
+        type: string
+        example: "Country"
   Interaction:
     type: object
     required:
-    - data
+      - id
+      - type
     properties:
-      data:
-        type: object
-        required:
-          - id
-          - type
-        properties:
-          id:
-            type: string
-            format: uuid
-            example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          type:
-            type: string
-            example: "Interaction"
+      id:
+        type: string
+        format: uuid
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      type:
+        type: string
+        example: "Interaction"
   InteractionArray:
     type: object
     required:
