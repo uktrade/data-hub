@@ -604,16 +604,16 @@ definitions:
                 example: "Active - Proposal to Strike off"
               sic_code_1:
                 type: string
-                example: "20600	- Manufacture of man-made fibres"
+                example: "20600 - Manufacture of man-made fibres"
               sic_code_2:
                 type: string
-                example: "52211	- Operation of rail freight terminals"
+                example: "52211 - Operation of rail freight terminals"
               sic_code_3:
                 type: string
-                example: "71111	- Architectural activities"
+                example: "71111 - Architectural activities"
               sic_code_4:
                 type: string
-                example: "96030	- Funeral and related activities"
+                example: "96030 - Funeral and related activities"
               uri:
                 type: string
                 example: "http://www.example.com"
