@@ -18,6 +18,19 @@ tags:
   description: Belongs to company operations in Data Hub
 schemes:
 - https
+
+securityDefinitions:
+  OauthSecurity:
+    type: oauth2
+    flow: password
+    tokenUrl: '/token/'
+    scopes:
+      user: User scope
+      
+security:
+  - OauthSecurity:
+    - user
+
 paths:
   /company/{companyId}:
     get:
