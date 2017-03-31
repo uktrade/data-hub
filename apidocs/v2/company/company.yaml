@@ -400,6 +400,27 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/CompanyRaw'
+      meta:
+        type: object
+        properties:
+          count:
+            type: integer
+            example: 30
+      links:
+        type: object
+        properties:
+          self: 
+            type: string
+            example: 'http://HOST/v2/company/d290f1ee-6c54-4b01-90e6-d701748f0851/children?page[offset]=0&page[limit]=10'
+          next: 
+            type: string
+            example: 'http://HOST/v2/company/d290f1ee-6c54-4b01-90e6-d701748f0851/parents?page[offset]=10&page[limit]=10'
+          prev: 
+            type: string
+            example: 'http://HOST/v2/company/d290f1ee-6c54-4b01-90e6-d701748f0851/children?page[offset]=0&page[limit]=10'
+          last: 
+            type: string
+            example: 'http://HOST/v2/company/d290f1ee-6c54-4b01-90e6-d701748f0851/parents?page[offset]=120&page[limit]=10'
   CompanyRaw:
     type: object
     required:
@@ -448,6 +469,27 @@ definitions:
     required:
     - data
     properties:
+      meta:
+        type: object
+        properties:
+          count:
+            type: integer
+            example: 30
+      links:
+        type: object
+        properties:
+          self: 
+            type: string
+            example: 'http://HOST/v2/company/d290f1ee-6c54-4b01-90e6-d701748f0851/exportToCountries?page[offset]=0&page[limit]=10'
+          next: 
+            type: string
+            example: 'http://HOST/v2/company/d290f1ee-6c54-4b01-90e6-d701748f0851/futureInterestCountries?page[offset]=10&page[limit]=10'
+          prev: 
+            type: string
+            example: 'http://HOST/v2/company/d290f1ee-6c54-4b01-90e6-d701748f0851/exportToCountries?page[offset]=0&page[limit]=10'
+          last: 
+            type: string
+            example: 'http://HOST/v2/company/d290f1ee-6c54-4b01-90e6-d701748f0851/futureInterestCountries?page[offset]=120&page[limit]=10'
       data:
         type: array
         items:
@@ -483,6 +525,27 @@ definitions:
     required:
     - data
     properties:
+      meta:
+        type: object
+        properties:
+          count:
+            type: integer
+            example: 30
+      links:
+        type: object
+        properties:
+          self: 
+            type: string
+            example: 'http://HOST/v2/company/d290f1ee-6c54-4b01-90e6-d701748f0851/interactions?page[offset]=0&page[limit]=10'
+          next: 
+            type: string
+            example: 'http://HOST/v2/company/d290f1ee-6c54-4b01-90e6-d701748f0851/interactions?page[offset]=10&page[limit]=10'
+          prev: 
+            type: string
+            example: 'http://HOST/v2/company/d290f1ee-6c54-4b01-90e6-d701748f0851/interactions?page[offset]=0&page[limit]=10'
+          last: 
+            type: string
+            example: 'http://HOST/v2/company/d290f1ee-6c54-4b01-90e6-d701748f0851/interactions?page[offset]=120&page[limit]=10'
       data:
         type: array
         items:
