@@ -174,11 +174,11 @@ definitions:
         properties:
           type:
             type: string
-            example: "Company"
+            example: 'Company'
           id:
             type: string
             format: uuid
-            example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+            example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
           attributes:
             title: Company
             type: object
@@ -192,33 +192,33 @@ definitions:
             properties:
               name:
                 type: string
-                example: "EXAMPLE Ltd"
+                example: 'EXAMPLE Ltd'
               trading_name:
                 type: string
-                example: "Example Trading"
+                example: 'Example Trading'
               uk_based:
                 type: boolean
               registered_address_1:
                 type: string
-                example: "123 HIGH STREET"
+                example: '123 HIGH STREET'
               registered_address_2:
                 type: string
-                example: "AREA"
+                example: 'AREA'
               registered_address_3:
                 type: string
-                example: "SUBTOWN"
+                example: 'SUBTOWN'
               registered_address_4:
                 type: string
-                example: "SUBREGION"
+                example: 'SUBREGION'
               registered_address_town:
                 type: string
-                example: "ANYTOWN"
+                example: 'ANYTOWN'
               registered_address_county:
                 type: string
-                example: "ANYSHIRE"
+                example: 'ANYSHIRE'
               registered_address_postcode:
                 type: string
-                example: "AB1 2CD"
+                example: 'AB1 2CD'
               created_on:
                 type: string
                 format: date-time
@@ -235,45 +235,45 @@ definitions:
                 example: 2014-07-23T10:36:04
               archived_reason:
                 type: string
-                example: "Company dissolved"
+                example: 'Company dissolved'
               archived_by:
                 type: string
-                example: "A N Advisor"
+                example: 'A N Advisor'
               alias:
                 type: string
-                example: "EXAMPLE TRADING"
+                example: 'EXAMPLE TRADING'
               lead:
                 type: boolean
               description:
                 type: string
-                example: "MANUFACTURER OF WIDGETS AND DOODADS"
+                example: 'MANUFACTURER OF WIDGETS AND DOODADS'
               website:
                 type: string
-                example: "http://www.example.com"
+                example: 'http://www.example.com'
               trading_address_1:
                 type: string
-                example: "123 HIGH STREET"
+                example: '123 HIGH STREET'
               trading_address_2:
                 type: string
-                example: "AREA"
+                example: 'AREA'
               trading_address_3:
                 type: string
-                example: "SUBTOWN"
+                example: 'SUBTOWN'
               trading_address_4:
                 type: string
-                example: "SUBREGION"
+                example: 'SUBREGION'
               trading_address_town:
                 type: string
-                example: "ANYTOWN"
+                example: 'ANYTOWN'
               trading_address_county:
                 type: string
-                example: "ANYSHIRE"
+                example: 'ANYSHIRE'
               trading_address_postcode:
                 type: string
-                example: "AB1 2CD"
+                example: 'AB1 2CD'
               headquarter_type:
                 type: string
-                example: "UK Headquarters"
+                example: 'UK Headquarters'
           relationships:
             $ref: '#/definitions/CompanyRelationships'
           links: 
@@ -281,7 +281,7 @@ definitions:
             properties: 
               self:
                 type: string
-                example: "http://HOST/v2/company/d290f1ee-6c54-4b01-90e6-d701748f0851"
+                example: 'http://HOST/v2/company/d290f1ee-6c54-4b01-90e6-d701748f0851'
   CompanyRelationships:
     type: object
     properties:
@@ -333,10 +333,10 @@ definitions:
           id:
             type: string
             format: uuid
-            example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+            example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
           type:
             type: string
-            example: "Advisor"
+            example: 'Advisor'
   BusinessType:
     type: object
     required:
@@ -351,10 +351,10 @@ definitions:
           id:
             type: string
             format: uuid
-            example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+            example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
           type:
             type: string
-            example: "BusinessType"
+            example: 'BusinessType'
   Classification:
     type: object
     required:
@@ -369,10 +369,10 @@ definitions:
           id:
             type: string
             format: uuid
-            example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+            example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
           type:
             type: string
-            example: "OneListClassifaction"
+            example: 'OneListClassifaction'
   CompaniesHouseData:
     type: object
     required:
@@ -387,10 +387,10 @@ definitions:
           id:
             type: string
             format: string
-            example: "SCO-123456"
+            example: 'SCO-123456'
           type:
             type: string
-            example: "CompaniesHouse"
+            example: 'CompaniesHouse'
   CompanyKeyArray:
     type: object
     required:
@@ -430,10 +430,10 @@ definitions:
       id:
         type: string
         format: uuid
-        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
       type:
         type: string
-        example: "Company" 
+        example: 'Company' 
   ContactArray:
     type: object
     required:
@@ -452,10 +452,10 @@ definitions:
       id:
         type: string
         format: uuid
-        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
       type:
         type: string
-        example: "Contact"
+        example: 'Contact'
   Country:
     type: object
     required:
@@ -503,10 +503,10 @@ definitions:
       id:
         type: string
         format: uuid
-        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
       type:
         type: string
-        example: "Country"
+        example: 'Country'
   Interaction:
     type: object
     required:
@@ -516,10 +516,10 @@ definitions:
       id:
         type: string
         format: uuid
-        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
       type:
         type: string
-        example: "Interaction"
+        example: 'Interaction'
   InteractionArray:
     type: object
     required:
@@ -564,10 +564,10 @@ definitions:
           id:
             type: string
             format: uuid
-            example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+            example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
           type:
             type: string
-            example: "EmployeeRange"
+            example: 'EmployeeRange'
   Sector:
     type: object
     required:
@@ -582,10 +582,10 @@ definitions:
           id:
             type: string
             format: uuid
-            example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+            example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
           type:
             type: string
-            example: "Sector"
+            example: 'Sector'
   TurnoverRange:
     type: object
     required:
@@ -602,7 +602,7 @@ definitions:
             format: uuid
           type:
             type: string
-            example: "TurnoverRange"
+            example: 'TurnoverRange'
   UKRegion:
     type: object
     required:
@@ -617,10 +617,10 @@ definitions:
           id:
             type: string
             format: uuid
-            example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+            example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
           type:
             type: string
-            example: "UKRegion"
+            example: 'UKRegion'
   CompaniesHouseCompany:
     type: object
     description: A Companies House company object
@@ -638,10 +638,10 @@ definitions:
         properties:
           type:
             type: string
-            example: "CompaniesHouseCompany"
+            example: 'CompaniesHouseCompany'
           id:
             type: string
-            example: "SCO-123456"
+            example: 'SCO-123456'
           attributes:
             title: CompaniesHouseCompany
             type: object
@@ -656,43 +656,43 @@ definitions:
                 type: string
               registered_address_1:
                 type: string
-                example: "123 HIGH STREET"
+                example: '123 HIGH STREET'
               registered_address_2:
                 type: string
-                example: "AREA"
+                example: 'AREA'
               registered_address_town:
                 type: string
-                example: "ANYTOWN"
+                example: 'ANYTOWN'
               registered_address_county:
                 type: string
-                example: "ANYSHIRE"
+                example: 'ANYSHIRE'
               registered_address_postcode:
                 type: string
-                example: "AB1 2CD"
+                example: 'AB1 2CD'
               company_number:
                 type: string
-                example: "SCO-123456"
+                example: 'SCO-123456'
               company_category:
                 type: string
-                example: "Private Limited Company"
+                example: 'Private Limited Company'
               company_status:
                 type: string
-                example: "Active - Proposal to Strike off"
+                example: 'Active - Proposal to Strike off'
               sic_code_1:
                 type: string
-                example: "20600 - Manufacture of man-made fibres"
+                example: '20600 - Manufacture of man-made fibres'
               sic_code_2:
                 type: string
-                example: "52211 - Operation of rail freight terminals"
+                example: '52211 - Operation of rail freight terminals'
               sic_code_3:
                 type: string
-                example: "71111 - Architectural activities"
+                example: '71111 - Architectural activities'
               sic_code_4:
                 type: string
-                example: "96030 - Funeral and related activities"
+                example: '96030 - Funeral and related activities'
               uri:
                 type: string
-                example: "http://www.example.com"
+                example: 'http://www.example.com'
               incorporation_date:
                 type: string
                 format: date-time
@@ -702,4 +702,4 @@ definitions:
             properties: 
               self:
                 type: string
-                example: "http://HOST/v2/ch_company/d290f1ee-6c54-4b01-90e6-d701748f0851"
+                example: 'http://HOST/v2/ch_company/d290f1ee-6c54-4b01-90e6-d701748f0851'
