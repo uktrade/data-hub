@@ -1,0 +1,116 @@
+swagger: '2.0'
+info:
+  description: Data Hub Metadata API V2
+  version: 1.0.0
+  title: Metadata API
+  contact:
+    email: jim.smith@digital.trade.gov.uk
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+externalDocs:
+  description: JSON API usage and issues
+  url: './README.md'
+
+basePath: /v2
+
+tags:
+- name: public
+  description: API open to Data Hub client
+- name: metadata
+  description: Belongs to metadata operations in Data Hub
+schemes:
+- https
+
+securityDefinitions:
+  OauthSecurity:
+    type: oauth2
+    flow: password
+    tokenUrl: '/token/'
+    scopes:
+      user: User scope
+
+security:
+  - OauthSecurity:
+    - user
+
+paths:
+  /metadata/{metadataname}:
+    get:
+      tags:
+      - metadata
+      summary: Returns a metadata list object from the Data Hub repository
+      operationId: getcompany
+      description: |
+        Requires the user to know the name of the associated metadata table
+      produces:
+      - application/vnd.api+json
+      parameters:
+      - in: path
+        name: metadataname
+        description: Name of the metadata list being required
+        required: true
+        type: string
+      responses:
+        200:
+          description: JSON API formatted metadata list
+          schema:
+            $ref: '#/definitions/Metadata'
+
+definitions:
+  Metadata:
+    type: object
+    description: A generic metadata response
+    required: 
+    - data
+    - meta
+    properties:
+      data:
+        type: object
+        required:
+          - id
+          - type
+          - attributes
+        properties:
+          id:
+            type: string
+            format: uuid
+            example: 'd290f1ee-6c54-4b01-90e6-d701748f0851'
+          type:
+            type: string
+            example: 'Metadata'
+          attributes:
+            properties:
+              metadata:
+                type: array
+                items: 
+                  type: object
+                  $ref: '#/definitions/KeyValueOptionalOrder'
+      meta:
+        type: object
+        $ref: '#/definitions/MetadataMetaInfo'
+  KeyValueOptionalOrder:
+    type: object
+    required:
+    - id
+    - name
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: '5ab2a03c-a6b5-4b8f-b1e5-a6e037332e57'
+      name:
+        type: string
+        example: 'Limited company'
+      order: 
+        type: integer
+        example: 1
+  MetadataMetaInfo:
+    type: object
+    required:
+    - metadata_name
+    properties:
+      metadata_name:
+        type: string
+        example: "businesstype"
