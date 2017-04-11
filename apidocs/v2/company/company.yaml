@@ -79,7 +79,7 @@ paths:
         description: Company data to update
         required: true
         schema:
-          $ref: '/definitions/Company'
+          $ref: '#/definitions/Company'
       responses:
         200:
           description: item updated
@@ -104,7 +104,7 @@ paths:
         description: Company to add
         required: true
         schema:
-          $ref: '/definitions/Company'
+          $ref: '#/definitions/Company'
       responses:
         201:
           description: item created
