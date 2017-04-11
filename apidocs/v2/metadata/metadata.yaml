@@ -9,10 +9,6 @@ info:
     name: MIT
     url: https://opensource.org/licenses/MIT
 
-externalDocs:
-  description: JSON API usage and issues
-  url: './README.md'
-
 basePath: /v2
 
 tags:
