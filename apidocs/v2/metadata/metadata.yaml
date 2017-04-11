@@ -106,7 +106,12 @@ definitions:
     type: object
     required:
     - metadata_name
+    - count
     properties:
       metadata_name:
         type: string
         example: "businesstype"
+      count:
+        type: integer
+        description: the number of elements in the metadata array
+        example: 1

@@ -8,4 +8,5 @@ Metadata is nearly always an array of objects consisting of a UUID id and a stri
 
 ## Ordered metadata
 
-A couple of the metadata tables require the front end to display them in a specific order, and that ordered cannot easily be inferred from the data itself (at least by a computer); these therefore have a third element to each object - an explicit order that allows the front end to display things in the order they were intended without complex parsing.
+A couple of the metadata tables require the front end to display t
+hem in a specific order, and that ordered cannot easily be inferred from the data itself (at least by a computer); these therefore have a third element to each object - an explicit order that allows the front end to display things in the order they were intended without complex parsing.
