@@ -214,9 +214,6 @@ definitions:
               archived_reason:
                 type: string
                 example: 'Company dissolved'
-              archived_by:
-                type: string
-                example: 'A N Advisor'
               lead:
                 type: boolean
               description:
@@ -246,9 +243,6 @@ definitions:
               trading_address_postcode:
                 type: string
                 example: 'AB1 2CD'
-              headquarter_type:
-                type: string
-                example: 'UK Headquarters'
           relationships:
             $ref: '#/definitions/CompanyRelationships'
           links:
@@ -261,6 +255,8 @@ definitions:
     type: object
     properties:
       account_manager:
+        $ref: '#/definitions/Advisor'
+      archived_by:
         $ref: '#/definitions/Advisor'
       business_type:
         $ref: '#/definitions/BusinessType'
@@ -278,6 +274,8 @@ definitions:
         $ref: '#/definitions/CountryArray'
       future_interest_countries:
         $ref: '#/definitions/CountryArray'
+      headquarter_type:
+        $ref: '#/definitions/HeadquarterType'
       interactions:
         $ref: '#/definitions/InteractionArray'
       one_list_owner:
@@ -560,6 +558,23 @@ definitions:
           type:
             type: string
             example: 'Sector'
+  HeadquarterType:
+    type: object
+    required:
+    - data
+    properties:
+      data:
+        type: object
+        required:
+          - id
+          - type
+        properties:
+          id:
+            type: string
+            format: uuid
+          type:
+            type: string
+            example: 'HeadquarterType'
   TurnoverRange:
     type: object
     required:
