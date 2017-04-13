@@ -285,8 +285,8 @@ definitions:
         $ref: '#/definitions/InteractionArray'
       one_list_owner:
         $ref: '#/definitions/Advisor'
-      parents:
-        $ref: '#/definitions/CompanyKeyArray'
+      parent:
+        $ref: '#/definitions/CompanyKey'
       registered_address_country:
           $ref: '#/definitions/Country'
       sector:
@@ -399,6 +399,23 @@ definitions:
           last:
             type: string
             example: 'http://HOST/v2/company/d290f1ee-6c54-4b01-90e6-d701748f0851/parents?page[offset]=120&page[limit]=10'
+  CompanyKey:
+    type: object
+    required:
+    - data
+    properties:
+      data:
+        type: object
+        required:
+          - id
+          - type
+        properties:
+          id:
+            type: string
+            format: uuid
+          type:
+            type: string
+            example: 'CompanyKey'
   CompanyRaw:
     type: object
     required:
