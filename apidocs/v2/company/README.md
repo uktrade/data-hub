@@ -17,3 +17,12 @@ Although there is a GET /company/{companyId} operation, there is no matching GET
 ## Technical details
 
 The company.yaml file is a Swagger 2.0 specification that generates a JSON API payload and describes JSON API behaviours. Swagger lacks the tools to describe the semantics of JSON API in detail, so the reader is advised to use the Example: data included for each object as a guide to the expected behaviour.
+
+## Date-time stamps
+
+Because the whole Company object is always passed back and forth between the client and server, responsibility for maintaining the modification timestamps, if present, (modified_on and archived_on) belongs to the server. The client is free to change these, but they will simply be ignored by the server on PUT.
+
+## Archive flag
+
+When a company is to be archived this is signalled outside of the main body with an Archived=true flag in the query part of the URL.
+In this case the archived_by relationship and the archived_reason fields become mandatory. Without creating a second endpoint this is not possible to model in Swagger.
