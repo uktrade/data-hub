@@ -181,6 +181,7 @@ definitions:
                 example: 'Example Trading'
               uk_based:
                 type: boolean
+                description: "Read only value"
               registered_address_1:
                 type: string
                 example: '123 HIGH STREET'
@@ -415,7 +416,7 @@ definitions:
             format: uuid
           type:
             type: string
-            example: 'CompanyKey'
+            example: 'Company'
   CompanyRaw:
     type: object
     required:
